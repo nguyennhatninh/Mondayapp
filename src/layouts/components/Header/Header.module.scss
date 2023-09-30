@@ -1,0 +1,78 @@
+.wrapper {
+    position: fixed;
+    display: block;
+    font-family: var(--font-header);
+    height: var(--header-height);
+    width: 100%;
+    margin: 0;
+    background-color: var(--color-header);
+    z-index: 999;
+}
+.inner {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px 0 4px;
+}
+.header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    .options-icon {
+        padding: 10px;
+        margin: 0 4px;
+        &:hover {
+            border-radius: 4px;
+            background-color: var(--color-hover);
+        }
+    }
+
+    .header-btn {
+        font-size: 1.3rem;
+        font-weight: 500;
+    }
+}
+.logo-theme {
+    height: 24px;
+    width: 24px;
+}
+.actions {
+    display: flex;
+    align-items: center;
+    .header-icon {
+        padding: 10px;
+        margin: 0 2px;
+        border-radius: 4px;
+        &:hover {
+            background-color: var(--color-hover);
+            cursor: pointer;
+        }
+    }
+    .line {
+        margin: 0 2px;
+        height: 22px;
+        border-left: 1px solid #d0d4e4;
+    }
+    .avarta-with-logo {
+        display: flex;
+        height: 32px;
+        margin-left: 2px;
+        align-items: center;
+        background-color: #f6f7fc;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        .logo-theme {
+            width: 24px;
+            height: 24px;
+            margin: 0 6px;
+        }
+        .avarta {
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+        }
+    }
+}

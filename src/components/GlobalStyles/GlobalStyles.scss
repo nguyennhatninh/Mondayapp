@@ -1,0 +1,30 @@
+@import 'normalize.css';
+
+:root {
+    --primary: #0073ea;
+    --primary-light: #0fa2e2;
+    --primary-hover: #0060b9;
+    --white: #fff;
+    --black: #000;
+    --color-header: #eceff8;
+    --color-hover: #dcdfec;
+    --color-title: #323338;
+    --color-border: #919795;
+    --header-height: 48px;
+    --font-header: 'Poppins', sans-serif;
+    --font-family: 'Figtree', sans-serif;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    font-size: 62.5%;
+}
+body {
+    font-family: var(--font-family);
+    font-size: 1.6rem;
+    line-height: 1.5;
+    text-rendering: optimizeSpeed;
+}

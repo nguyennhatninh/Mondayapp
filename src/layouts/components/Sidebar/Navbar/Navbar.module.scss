@@ -1,0 +1,25 @@
+.navbar {
+    padding: 12px 40px 12px 12px;
+    position: relative;
+    border-bottom: 1px solid #d0d4e4;
+    .navbar-item {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        margin-bottom: 1px;
+        padding: 4px 100px 4px 6px;
+        font-size: 1.4rem;
+        font-weight: 300;
+        color: var(--black);
+        text-decoration: none;
+        img {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+        }
+    }
+}
+.navbar-item.active {
+    background-color: #cce5ff;
+    border-radius: 4px;
+}

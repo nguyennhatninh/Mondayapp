@@ -1,0 +1,56 @@
+.task-table-input {
+    display: flex;
+    width: 70%;
+    height: 32px;
+    padding-left: 12px;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-left: 6px solid #00c875;
+    border-bottom-left-radius: 6px;
+    margin-bottom: 20px;
+    &:hover {
+        background-color: #f5f6f8;
+        input {
+            border: 1px solid var(--color-border);
+        }
+    }
+    &:focus-within {
+        background-color: #cce5ff;
+    }
+    input {
+        width: 60%;
+        color: #666;
+        font-size: 1.3rem;
+        border: none;
+        outline: none;
+        line-height: 22px;
+        border-radius: 3px;
+        background-color: transparent;
+        &::placeholder {
+            font-size: 1.3rem;
+            font-family: var(--font-family);
+            opacity: 0.9;
+        }
+        &:focus {
+            border: 1px solid var(--primary);
+            background-color: var(--white);
+        }
+    }
+}
+
+.task-table-input.color0 {
+    border-left: 6px solid var(--primary-light);
+}
+.task-table-input.color1 {
+    border-left: 6px solid #00c875;
+}
+.task-table-input.color2 {
+    border-left: 6px solid #a25ddc;
+}
+.task-table-input.color3 {
+    border-left: 6px solid #808080;
+}
+.task-table-input.color4 {
+    border-left: 6px solid #ff642e;
+}

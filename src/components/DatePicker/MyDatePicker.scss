@@ -1,0 +1,31 @@
+.custom-mobile-datepicker .MuiInputBase-root {
+    font-size: 1.3rem;
+    font-family: var(--font-family);
+}
+.custom-mobile-datepicker .MuiInputBase-root.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+    border: none;
+}
+.custom-mobile-datepicker .MuiInputBase-input {
+    padding: 0 !important;
+    text-align: center;
+}
+.MuiPickersCalendarHeader-root .MuiPickersCalendarHeader-label {
+    font-size: 1.5rem;
+}
+.MuiTypography-root.MuiDayCalendar-weekDayLabel {
+    font-family: var(--font-family);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+.MuiButtonBase-root.MuiPickersDay-root {
+    font-family: var(--font-family);
+    font-size: 1.3rem;
+}
+.MuiButtonBase-root.MuiButton-root {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+.MuiPickersYear-yearButton {
+    font-size: 1.3rem !important;
+    font-family: var(--font-family) !important;
+}

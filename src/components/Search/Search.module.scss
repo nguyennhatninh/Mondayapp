@@ -1,0 +1,102 @@
+.search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 8px 0 6px;
+    padding: 4px;
+    border: 1px solid #d0d4e4;
+    border-radius: 4px;
+    .search-icon {
+        width: 22px;
+        height: 22px;
+        padding: 2px;
+    }
+    .search-icon.hover {
+        &:hover {
+            background-color: var(--color-hover);
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    }
+    .search-input {
+        width: 153px;
+        margin-left: 4px;
+        border: none;
+        transition: width 0.1s ease;
+        &:focus {
+            outline: none;
+        }
+    }
+    .search-input::placeholder {
+        font-family: var(--font-family);
+        font-size: 1.4rem;
+        color: #666;
+        opacity: 1;
+    }
+    &:hover {
+        border: 1px solid var(--black);
+    }
+    &:hover .search-icon-custom {
+        display: block;
+    }
+    &:focus-within {
+        border: 1px solid var(--primary);
+    }
+    .search-icon-custom {
+        position: absolute;
+        display: none;
+        top: calc(50% - 12px);
+        right: 0;
+        width: 24px;
+        height: 24px;
+        padding: 4px;
+        margin: 0 2px;
+        &:hover {
+            background-color: var(--color-hover);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    }
+    &:focus-within .search-icon-custom {
+        display: block;
+    }
+    .search-input:not(:placeholder-shown) ~ .search-icon-custom {
+        display: block;
+    }
+    .search-icon-clear {
+        position: absolute;
+        display: none;
+        top: calc(50% - 12px);
+        right: 26px;
+        font-size: 1.4rem;
+        color: #333;
+        padding: 5px;
+        margin: 0 2px;
+        &:hover {
+            background-color: var(--color-hover);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    }
+    .search-input:not(:placeholder-shown) ~ .search-icon-clear {
+        display: block;
+    }
+}
+.search.searchLite {
+    border: none;
+    cursor: pointer;
+    &:hover {
+        background-color: var(--color-hover);
+    }
+    .search-input {
+        width: 50px;
+        transition: width 0.2s ease;
+    }
+    &:hover .search-input {
+        cursor: pointer;
+        background-color: var(--color-hover);
+    }
+    &:hover .search-icon-custom {
+        display: none;
+    }
+}

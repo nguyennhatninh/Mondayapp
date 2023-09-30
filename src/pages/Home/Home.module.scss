@@ -1,0 +1,93 @@
+.wrapper {
+    width: -webkit-fill-available;
+    background-color: var(--white);
+    border-top-left-radius: 8px;
+}
+.home-body {
+    display: flex;
+    background-color: #f6f7fb;
+    justify-content: space-between;
+    margin-left: 1px;
+    padding: 0 20px;
+    .main-container {
+        width: calc(100% - (288px + 24px));
+        margin-top: 16px;
+        background-color: var(--white);
+        border-radius: 10px;
+        .main-content {
+            max-width: 737px;
+            .task-boards {
+                display: flex;
+                flex-wrap: wrap;
+                .task-board-lite {
+                    width: 280px;
+                    margin: 16px;
+                    padding: 8px;
+                    color: #333;
+                    text-decoration: none;
+                    border: 1px solid #d0d4e4;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    &:hover {
+                        border: 1px solid transparent;
+                        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+                    }
+                }
+            }
+            .inbox {
+                border: 1px solid #d0d4e4;
+                border-radius: 10px;
+                padding: 16px;
+                .inbox-item {
+                    height: 72px;
+                    display: flex;
+                    padding: 12px 30px;
+                    font-size: 1.5rem;
+                    align-items: center;
+                    border-bottom: 1px solid #d0d4e4;
+                    &:hover {
+                        background-color: var(--color-hover);
+                        border-radius: 10px;
+                        cursor: pointer;
+                    }
+                    .inbox-image {
+                        width: 40px;
+                        height: 40px;
+                        margin-right: 12px;
+                        border-radius: 9999px;
+                    }
+                    .inbox-content {
+                        flex-grow: 1;
+                        a {
+                            text-decoration: none;
+                            color: var(--primary);
+                        }
+                    }
+                    .inbox-timed {
+                        display: flex;
+                        color: #55565c;
+                    }
+                }
+            }
+            .my-workspace {
+                display: inline-flex;
+                border: 1px solid #d0d4e4;
+                border-radius: 10px;
+                padding: 16px;
+                margin-bottom: 80px;
+                &:hover {
+                    border: none;
+                    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+                }
+            }
+        }
+    }
+    .inbox-timed > &:first-child {
+        margin-right: 10px;
+    }
+    .right-container {
+        width: 288px;
+        margin-top: 16px;
+        background-color: var(--white);
+    }
+}

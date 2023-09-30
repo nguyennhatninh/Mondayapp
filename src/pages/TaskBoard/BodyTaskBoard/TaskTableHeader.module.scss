@@ -1,0 +1,206 @@
+.task-table {
+    position: relative;
+    cursor: pointer;
+    .table-title-option {
+        display: none;
+        position: absolute;
+        top: 8px;
+        left: -28px;
+        width: 28px;
+        height: 28px;
+        padding: 3px 6px;
+        &:hover {
+            border-radius: 4px;
+            background-color: var(--color-hover);
+        }
+    }
+    &:hover .table-title-option {
+        display: block;
+    }
+}
+.task-table.collapsed {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid var(--color-border);
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    .table-title-option {
+        left: -34px;
+    }
+}
+.task-table.hide {
+    display: none;
+}
+.task-table.color0 {
+    border-left: 6px solid var(--primary-light);
+}
+@mixin task-table($color-name, $color-value) {
+    .task-table.#{$color-name} {
+        border-left: 6px solid $color-value;
+        margin-top: 20px;
+    }
+}
+@include task-table('color1', #00c875);
+@include task-table('color2', #a25ddc);
+@include task-table('color3', #808080);
+@include task-table('color4', #ff642e);
+.table-title {
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+    color: var(--primary-light);
+    .table-title-icon {
+        color: var(--primary-light);
+        margin-right: 10px;
+        font-size: 1.3rem;
+        transition: transform 0.2s;
+        transform: rotate(-0.25turn);
+    }
+    .table-title-input {
+        margin-top: 6px;
+        margin-bottom: 6px;
+        line-height: 26px;
+        font-size: 1.8rem;
+        font-weight: 600;
+        border: none;
+        outline: none;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        &:hover {
+            border: 1px solid var(--color-border);
+        }
+    }
+}
+.table-title.color0 {
+    margin-top: 0;
+}
+@mixin table-color($color-name, $color-value) {
+    .table-title.#{$color-name} {
+        color: $color-value;
+        .table-title-icon {
+            color: $color-value;
+        }
+        .table-title-input {
+            color: $color-value;
+            &:focus {
+                width: 100%;
+                border: 1px solid $color-value;
+            }
+        }
+        .table-title-input.show {
+            &:focus {
+                width: 67%;
+            }
+        }
+    }
+    .table-header.#{$color-name} {
+        border-left: 6px solid $color-value;
+    }
+}
+@include table-color('color0', var(--primary-light));
+@include table-color('color1', #00c875);
+@include table-color('color2', #a25ddc);
+@include table-color('color3', #808080);
+@include table-color('color4', #ff642e);
+
+.table-title-icon.show {
+    transform: rotate(0turn);
+}
+
+.table-header {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.4rem;
+    color: #333;
+    border: 1px solid var(--color-border);
+    border-left: 6px solid var(--primary-light);
+    border-top-left-radius: 6px;
+    .table-header-task {
+        width: 45%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .table-header-categories {
+        width: 55%;
+        display: flex;
+        justify-content: space-between;
+        .table-header-category {
+            width: 100%;
+            height: 29px;
+            display: flex;
+            justify-content: center;
+            padding: 4px 0;
+            border-left: 1px solid var(--color-border);
+        }
+    }
+}
+
+.task-table-count {
+    font-size: 1.4rem;
+    color: #333;
+    margin-left: 24px;
+    padding-bottom: 4px;
+}
+.task-table-summaries {
+    width: 55%;
+    display: flex;
+    font-size: 1.4rem;
+    color: #333;
+    justify-content: space-between;
+}
+.task-table-summary {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    border-left: 1px solid var(--color-border);
+}
+.summary-duration {
+    margin: 4px;
+    font-size: 1.3rem;
+    background-color: var(--primary-light);
+    color: var(--white);
+    border-radius: 10px;
+}
+.summary-status {
+    display: flex;
+    align-items: center;
+    margin: 4px;
+    height: 24px;
+}
+@mixin status-color($color-name, $color-value) {
+    .#{$color-name} {
+        height: 100%;
+        background-color: $color-value;
+        color: var(--white);
+    }
+}
+@include status-color('status0', #00c875);
+@include status-color('status1', #fdab3d);
+@include status-color('status2', #e44258);
+@include status-color('status3', #c4c4c4);
+
+.task-table-panel {
+    height: 80px;
+    font-size: 1.4rem;
+    color: #333;
+    background-color: var(--white);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0px 0px 4px var(--color-border);
+    .table-panel-item {
+        display: flex;
+        align-items: center;
+        height: 50%;
+        padding: 12px;
+        &:hover {
+            background-color: var(--color-hover);
+            cursor: pointer;
+        }
+    }
+    .table-panel-item > :first-child {
+        padding-right: 4px;
+    }
+}

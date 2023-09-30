@@ -1,0 +1,108 @@
+.header-task-main {
+    .header-task-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .header-task-description {
+        font-size: 1.4rem;
+        color: #797a89;
+    }
+}
+.task-title-right {
+    display: flex;
+    align-items: center;
+    .activity-btn {
+        color: #666;
+        .avarta {
+            border-radius: 9999px;
+            margin-left: 4px;
+        }
+        &:hover {
+            background-color: var(--color-hover);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    }
+    .invite-btn {
+        color: #666;
+        .invite-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 4px;
+        }
+    }
+    .menu-icon {
+        padding: 6px;
+        &:hover {
+            background-color: var(--color-hover);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    }
+}
+.task-title-left {
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: var(--color-title);
+    display: flex;
+    align-items: center;
+    img {
+        padding: 6px;
+        &:first-child {
+            margin-left: 8px;
+        }
+        &:hover {
+            background-color: var(--color-hover);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    }
+}
+
+.header-task-subset {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    border-bottom: 1px solid var(--color-border);
+    .header-task-view {
+        display: flex;
+        align-items: center;
+        .plus-icon {
+            padding: 10px;
+            color: #333;
+            font-size: 1.2rem;
+            &:hover {
+                background-color: var(--color-hover);
+                border-radius: 4px;
+                cursor: pointer;
+            }
+        }
+    }
+    .collapse-header {
+        width: 28px;
+        height: 28px;
+        margin: 6px;
+        padding: 4px;
+        border-radius: 9999px;
+        border: 1px solid var(--color-border);
+        &:hover {
+            background-color: var(--color-hover);
+            cursor: pointer;
+        }
+    }
+}
+
+.header-task-tool {
+    display: flex;
+    padding: 18px 0;
+    .menu-icon {
+        width: 32px;
+        height: 32px;
+        padding: 6px;
+        &:hover {
+            background-color: var(--color-hover);
+            border-radius: 4px;
+        }
+    }
+}

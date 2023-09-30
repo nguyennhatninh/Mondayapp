@@ -1,0 +1,190 @@
+.task-table-item {
+    display: flex;
+    align-items: center;
+}
+.task-table-container {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.4rem;
+    color: #333;
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-left: 6px solid #00c875;
+    .task-table-name {
+        width: 45%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-left: 32px;
+        .table-name-input {
+            width: 80%;
+            font-family: var(--font-family);
+            background-color: transparent;
+            border: none;
+            outline: none;
+            line-height: 20px;
+            border-radius: 3px;
+            &:focus {
+                border: 1px solid var(--primary);
+                background-color: var(--white);
+            }
+        }
+    }
+    .task-table-info {
+        width: 55%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .table-info-item {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 4px 0;
+            border-left: 1px solid var(--color-border);
+            cursor: pointer;
+            img {
+                height: 22px;
+                border-radius: 9999px;
+            }
+        }
+    }
+    &:hover {
+        background-color: #f5f6f8;
+    }
+    &:focus-within {
+        background-color: #cce5ff;
+    }
+}
+.table-info-item.date {
+    border: none;
+}
+
+@mixin title2($title-name, $title-value) {
+    .table-info-item.#{$title-name} {
+        position: relative;
+        &::after {
+            content: $title-value;
+            position: absolute;
+            top: -35px;
+            width: 100px;
+            height: 30px;
+            right: calc(50% - 50px);
+            text-align: center;
+        }
+    }
+}
+@include title2('Date', 'Date');
+@include title2('Person', 'Person');
+
+@mixin table-item-color($color-name, $color-value) {
+    .task-table-container.#{$color-name} {
+        border-left: 6px solid $color-value;
+    }
+}
+@include table-item-color('color0', var(--primary-light));
+@include table-item-color('color1', #00c875);
+@include table-item-color('color2', #a25ddc);
+@include table-item-color('color3', #808080);
+@include table-item-color('color4', #ff642e);
+
+.task-table-container.lite {
+    width: 98%;
+    border-left: 4px solid var(--primary);
+    .task-table-name {
+        width: 30%;
+    }
+    .task-table-info {
+        width: 30%;
+    }
+    .task-table-parent {
+        width: 20%;
+        display: flex;
+        align-items: center;
+        padding-left: 8px;
+        border-left: 1px solid var(--color-border);
+    }
+}
+.task-table-parent.main {
+    position: relative;
+    &::after {
+        content: 'Board';
+        position: absolute;
+        top: -35px;
+        width: 100px;
+        height: 30px;
+        right: calc(50% - 50px);
+        text-align: center;
+    }
+}
+@mixin title1($title-name, $title-value) {
+    .task-table-parent.#{$title-name} {
+        position: relative;
+        &::after {
+            content: $title-value;
+            position: absolute;
+            top: -35px;
+            width: 100px;
+            height: 30px;
+            right: calc(50% - 50px);
+            text-align: center;
+        }
+    }
+}
+@include title1('Board', 'Board');
+@include title1('Table', 'Table');
+
+.states {
+    width: 160px;
+    padding: 16px;
+    background-color: var(--white);
+    color: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 10px var(--color-border);
+    li {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 8px;
+        height: 30px;
+        cursor: pointer;
+    }
+}
+@mixin status-color($color-name, $color-value) {
+    .table-info-item.#{$color-name} {
+        color: var(--white);
+        background-color: $color-value;
+    }
+    .table-info-item.Status.#{$color-name} {
+        position: relative;
+        &::after {
+            content: 'Status';
+            position: absolute;
+            top: -35px;
+            width: 100px;
+            height: 30px;
+            right: calc(50% - 50px);
+            text-align: center;
+            color: #333;
+        }
+    }
+    .states .#{$color-name} {
+        background-color: $color-value;
+    }
+}
+@include status-color('grey', #c4c4c4);
+@include status-color('green', #00c875);
+@include status-color('yellow', #fdab3d);
+@include status-color('red', #e44258);
+
+.table-item-close {
+    font-size: 1.3rem;
+    margin-left: 8px;
+    padding: 6px;
+    cursor: pointer;
+    background-color: var(--color-hover);
+    border-radius: 4px;
+}

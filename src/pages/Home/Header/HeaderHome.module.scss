@@ -1,0 +1,30 @@
+.home-header {
+    height: 75px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    overflow: hidden;
+    .home-header-intro {
+        display: flex;
+        align-items: center;
+    }
+}
+.home-header-content > :first-child {
+    font-size: 1.4rem;
+}
+.home-header-btn {
+    display: flex;
+    align-items: center;
+    .home-header-icon {
+        margin-right: 6px;
+    }
+}
+.home-header-btn > :first-child {
+    margin-right: 16px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    &:hover {
+        color: var(--primary);
+    }
+}

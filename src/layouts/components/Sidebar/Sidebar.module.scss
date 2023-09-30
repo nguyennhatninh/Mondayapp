@@ -1,0 +1,122 @@
+.wrapper.visible {
+    width: 255px;
+    height: 100vh;
+    margin-right: 10px;
+    transition: width 0.2s;
+}
+.wrapper {
+    width: 28px;
+    height: 100vh;
+    margin-right: 10px;
+    transition: width 0.2s;
+}
+.navbar-fixed.visible {
+    width: 255px;
+    background-color: var(--white);
+    position: fixed;
+    border-top-right-radius: 8px;
+    height: 100vh;
+    transition: width 0.2s;
+}
+.navbar-fixed {
+    background-color: var(--white);
+    position: fixed;
+    border-top-right-radius: 8px;
+    height: 100vh;
+    width: 28px;
+    transition: width 0.2s;
+}
+.closed-nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 28px;
+    height: 36px;
+    background-color: #f6f7fb;
+    padding: 12px 4px;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    transform: rotate(0.5turn);
+    &:hover {
+        background-color: var(--color-hover);
+        cursor: pointer;
+    }
+}
+.closed-nav.visible {
+    transform: rotate(0);
+}
+.workspace {
+    display: flex;
+    margin: 12px 16px 10px 8px;
+    color: var(--corlor-title);
+
+    .options-btn {
+        width: 32px;
+        height: 32px;
+        padding: 6px;
+        &:hover {
+            background-color: var(--color-hover);
+            border-radius: 4px;
+        }
+    }
+}
+.workspace-choice {
+    min-width: 185px;
+    display: flex;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0 8px 0 6px;
+    padding: 4px;
+    .workspace-icon {
+        margin-right: 6px;
+        .workspace-logo {
+            position: relative;
+            padding: 2px 4px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--white);
+            background-color: #f279f2;
+            border-radius: 6px;
+            img {
+                position: absolute;
+                top: 10px;
+                right: -5px;
+            }
+        }
+        .workspace-logo.large {
+            margin-right: 8px;
+            font-size: 2.4rem;
+            padding: 10px 14px;
+            border-radius: 10px;
+            img {
+                width: 20px;
+                height: 20px;
+                position: absolute;
+                top: 36px;
+                right: -10px;
+            }
+        }
+    }
+    .workspace-choice-btn {
+        margin-left: 13px;
+    }
+}
+.workspace-choice.hover {
+    &:hover {
+        cursor: pointer;
+        background-color: var(--color-hover);
+        border-radius: 4px;
+    }
+}
+.workspace-interaction {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 16px 10px 8px;
+}
+.workspace-item {
+    margin: 12px 16px 10px 8px;
+}
+.children.large {
+    font-size: 1.8rem;
+    font-weight: 400;
+}
