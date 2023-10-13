@@ -19,7 +19,7 @@
     }
 }
 .task-tool-item.active {
-    background-color: #cce5ff;
+    background-color: var(--color-active);
     border-radius: 4px;
 }
 .tool-hide {
@@ -65,6 +65,7 @@
         width: 240px;
         padding: 8px;
         font-size: 1.4rem;
+        cursor: grab;
         .sort-item-title {
             display: flex;
             align-items: center;
@@ -130,3 +131,50 @@
 @include sort-item-color('color0', #11dd80);
 @include sort-item-color('color1', #00cff4);
 @include sort-item-color('color2', #ffcc00);
+
+.tool-filter {
+    display: flex;
+    padding: 10px 18px;
+    background-color: var(--white);
+    color: #333;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0px 0px 4px var(--color-border);
+    .tool-filter-title {
+        font-size: 1.5rem;
+        color: #666;
+        margin-left: 12px;
+    }
+    .tool-filter-item {
+        min-width: 100px;
+        padding: 6px 12px;
+        margin: 6px 12px;
+        font-size: 1.4rem;
+        background-color: #f5f6f8;
+        border-radius: 4px;
+        &:hover {
+            background-color: var(--color-hover);
+            cursor: pointer;
+        }
+    }
+    .tool-filter-item.active {
+        background-color: var(--color-active);
+    }
+}
+@mixin filter-status-color($color-name, $color-value) {
+    .tool-filter-item {
+        display: flex;
+        align-items: center;
+        .#{$color-name} {
+            width: 12px;
+            height: 12px;
+            border-radius: 9999px;
+            background-color: $color-value;
+            margin-right: 6px;
+        }
+    }
+}
+@include filter-status-color('color0', #00c875);
+@include filter-status-color('color1', #fdab3d);
+@include filter-status-color('color2', #e44258);
+@include filter-status-color('color3', #c4c4c4);

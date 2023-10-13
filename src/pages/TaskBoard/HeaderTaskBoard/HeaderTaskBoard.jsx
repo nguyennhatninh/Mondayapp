@@ -8,7 +8,7 @@ import TaskViewItem from './TaskViewItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
-import TaskTool from './TaskTool';
+import TaskTool from './TaskTool/TaskTool';
 
 const cx = classNames.bind(styles);
 

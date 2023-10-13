@@ -14,10 +14,10 @@ import { hideToolSelector } from '~/redux/selectors';
 const cx = classNames.bind(styles);
 
 function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTable, handleDeleteTable, hide }) {
-    const states = ['green', 'yellow', 'red', 'grey'];
-    const statusData = JSON.parse(localStorage.getItem(`status-${indexTB}-${index}`));
+    const states = ['Done', 'Working on it', 'Stuck', 'Not Started'];
     const tableItemData = JSON.parse(localStorage.getItem(`taskItems-${indexTB}-${index}`));
-    const dateData = JSON.parse(localStorage.getItem(`date-${indexTB}-${index}`));
+    const status = tableItemData?.map((item) => item.status);
+    const valueDate = tableItemData?.map((item) => item.valueDate);
 
     const hideTool = useSelector(hideToolSelector);
 
@@ -26,7 +26,7 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
     const [render, setRender] = useState(false);
 
     const inputRef = useRef();
-    const sortedDates = dateData ? dateData.sort((a, b) => moment(a, ['MM/DD/YY']) - moment(b, ['MM/DD/YY'])) : [];
+    const sortedDates = valueDate ? valueDate.sort((a, b) => moment(a, ['MM/DD/YY']) - moment(b, ['MM/DD/YY'])) : [];
     const nearestDate = sortedDates[0];
     const farthestDate = sortedDates[sortedDates.length - 1];
 
@@ -146,14 +146,13 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
                     <div className={cx('task-table-summary')}>
                         Status
                         <div className={cx('summary-status')}>
-                            {statusData ? (
+                            {status ? (
                                 states.map((state, index) => (
                                     <div
                                         key={index}
                                         style={{
                                             width: `${
-                                                (statusData.filter((status) => status === state).length /
-                                                    statusData.length) *
+                                                (status.filter((status) => status === state).length / status.length) *
                                                 100
                                             }%`,
                                         }}

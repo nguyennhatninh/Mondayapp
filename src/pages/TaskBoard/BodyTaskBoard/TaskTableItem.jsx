@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { hideToolSelector, taskBoardsSelector } from '~/redux/selectors';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
+import moment from 'moment';
 
 const cx = classNames.bind(styles);
 
@@ -32,24 +33,28 @@ function TaskTableItem({
     const dataTableItemToday = JSON.parse(localStorage.getItem('dataTaskTableToday'));
     const dataTableItemThisWeek = JSON.parse(localStorage.getItem('dataTaskTableThisWeek'));
 
-    const hideTool = useSelector(hideToolSelector);
-    const taskBoards = useSelector(taskBoardsSelector);
-
+    const statesArr = ['Done', 'Working on it', 'Stuck', 'Not Started'];
+    // Kiem tra cac index phan tu 0 voi cac index TableItem de xac dinh main hien thi title
     const main =
-        dataTableItemToday?.[0]?.indexTB === indexTB &&
-        dataTableItemToday?.[0]?.indexParent === indexParent &&
-        dataTableItemToday?.[0]?.index === indexItem &&
-        lite;
+        (`${Object.values(dataTableItemToday?.length > 0 && dataTableItemToday[0]).slice(0, 3)}` ===
+            `${indexTB},${indexParent},${indexItem}` &&
+            lite) ||
+        (`${Object.values(dataTableItemThisWeek?.length > 0 && dataTableItemThisWeek[0]).slice(0, 3)}` ===
+            `${indexTB},${indexParent},${indexItem}` &&
+            lite);
+
     const isToday =
         `${valueDate.$M + 1}-${valueDate.$D}-${valueDate.$y}` === `${dayjs().$M + 1}-${dayjs().$D}-${dayjs().$y}`;
-    const statesArr = [
-        ['green', 'yellow', 'red', 'grey'],
-        ['Done', 'Working on it', 'Stuck', 'Not Started'],
-    ];
+    const compareDatesWithCurrent =
+        moment(`${valueDate.$M + 1}-${valueDate.$D}-${valueDate.$y}`, ['MM/DD/YY']) >
+        moment(`${dayjs().$M + 1}-${dayjs().$D}-${dayjs().$y}`, ['MM/DD/YY']);
 
     const [valueContent, setValueContent] = useState(content);
     const [dataToday, setDataToday] = useState(dataTableItemToday || []);
     const [dataThisWeek, setDataThisWeek] = useState(dataTableItemThisWeek || []);
+
+    const hideTool = useSelector(hideToolSelector);
+    const taskBoards = useSelector(taskBoardsSelector);
 
     useEffect(() => {
         setValueContent(content);
@@ -110,7 +115,7 @@ function TaskTableItem({
     };
     // dataThisWeek
     useEffect(() => {
-        if (valueDate.week() === dayjs().week() && !isToday) {
+        if (valueDate.week() === dayjs().week() && compareDatesWithCurrent) {
             const isDuplicate = dataThisWeek.some(
                 (item) => item.indexTB === indexTB && item.indexParent === indexParent && item.index === indexItem,
             );
@@ -129,10 +134,8 @@ function TaskTableItem({
             const indexDuplicate = dataTableItemThisWeek?.findIndex(
                 (item) => item.indexTB === indexTB && item.indexParent === indexParent && item.index === indexItem,
             );
-            console.log(indexDuplicate);
             if (indexDuplicate >= 0) {
                 dataThisWeek.splice(indexDuplicate, 1);
-                console.log([...dataThisWeek]);
                 localStorage.setItem('dataTaskTableThisWeek', JSON.stringify([...dataThisWeek]));
             }
         }
@@ -147,9 +150,9 @@ function TaskTableItem({
 
     const renderStatus = () => (
         <ul className={cx('states')}>
-            {statesArr[0].map((item, index) => (
-                <li key={index} onClick={() => handleSetStatus(item, indexItem)} className={cx(item)}>
-                    {statesArr[1][index]}
+            {statesArr.map((item, index) => (
+                <li key={index} onClick={() => handleSetStatus(item, indexItem)} className={cx(`color${index}`)}>
+                    {statesArr[index]}
                 </li>
             ))}
         </ul>
@@ -198,8 +201,10 @@ function TaskTableItem({
                     {(indexTB === hideTool.index && hideTool.hideToolValue[2] === true) ||
                     indexTB !== hideTool.index ? (
                         <Tippy interactive render={renderStatus} placement="top" trigger="click">
-                            <div className={cx('table-info-item', main && 'Status', status)}>
-                                {statesArr[1].filter((_, index) => statesArr[0][index] === status)}
+                            <div
+                                className={cx('table-info-item', main && 'Status', `color${statesArr.indexOf(status)}`)}
+                            >
+                                {status}
                             </div>
                         </Tippy>
                     ) : null}

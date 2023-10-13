@@ -1,9 +1,9 @@
 import classNames from 'classnames/bind';
 
 import styles from './LoginPage.module.scss';
-import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 import Button from '~/components/Button/Button';
-import LoginSupport from './LoginSupport';
+import RegisterSupport from './RegisterSupport';
 
 const cx = classNames.bind(styles);
 
@@ -15,7 +15,7 @@ function LoginPage() {
                     <h1 className={cx('login-title')}>
                         <b>Log </b>In
                     </h1>
-                    <LoginForm login></LoginForm>
+                    <RegisterForm login></RegisterForm>
                     <div className={cx('login-separator')}>
                         <span className={cx('separator-line')}></span>
                         <div>Or Sign in with </div>
@@ -29,12 +29,12 @@ function LoginPage() {
                             Google
                         </Button>
                     </div>
-                    <LoginSupport link=" Sign up " href="./signup">
+                    <RegisterSupport link=" Sign up " href="./signup">
                         Don't have an account yet?
-                    </LoginSupport>
-                    <LoginSupport link="Visit our help center" href="./">
+                    </RegisterSupport>
+                    <RegisterSupport link="Visit our help center" href="./">
                         Can't log in?
-                    </LoginSupport>
+                    </RegisterSupport>
                 </div>
             </div>
         </div>

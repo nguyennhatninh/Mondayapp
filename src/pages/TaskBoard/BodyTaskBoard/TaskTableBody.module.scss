@@ -16,7 +16,7 @@
         }
     }
     &:focus-within {
-        background-color: #cce5ff;
+        background-color: var(--color-active);
     }
     input {
         width: 60%;

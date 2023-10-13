@@ -4,20 +4,20 @@ import styles from './LoginPage.module.scss';
 
 const cx = classNames.bind(styles);
 
-function LoginSupport({ children, link, otherLink, href, otherHref }) {
+function RegisterSupport({ children, link, otherLink, href, otherHref }) {
     return (
-        <div className={cx('login-support')}>
+        <div className={cx('register-support')}>
             {otherLink && (
-                <a className={cx('login-support-link')} href={otherHref}>
+                <a className={cx('register-support-link')} href={otherHref}>
                     {otherLink}
                 </a>
             )}
             <span>{children}</span>
-            <a className={cx('login-support-link')} href={href}>
+            <a className={cx('register-support-link')} href={href}>
                 {link}
             </a>
         </div>
     );
 }
 
-export default LoginSupport;
+export default RegisterSupport;

@@ -1,6 +1,5 @@
-// Component cha (SortTool)
-import { useState } from 'react';
 import classNames from 'classnames/bind';
+import { useState } from 'react';
 
 import styles from './TaskTool.module.scss';
 import SortToolItem from './SortToolItem';
