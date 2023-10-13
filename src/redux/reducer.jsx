@@ -2,10 +2,15 @@ const initState = {
     taskBoards: JSON.parse(localStorage.getItem(`TaskBoards`)) || [
         { id: 1, name: 'ninh', config: '/taskBoard/221228712000' },
     ],
-    hideTool: { index: null, hideToolValue: [true, true, true] },
-    sortTool: { index: null, indexTB: null, sortToolValue: null, label: '' },
     addTaskTable: [],
     searchTaskTable: { value: null, index: null },
+    filterTool: {
+        groupFilter: { indexTB: null, index: null },
+        dueDateFilter: { indexTB: null, value: null },
+        statusFilter: { indexTB: null, value: null },
+    },
+    hideTool: { index: null, hideToolValue: [true, true, true] },
+    sortTool: { index: null, indexTB: null, sortToolValue: null, label: '' },
 };
 
 const rootReducer = (state = initState, action) => {
@@ -37,16 +42,6 @@ const rootReducer = (state = initState, action) => {
                 ...state,
                 taskBoards: [...updatedTaskBoards],
             };
-        case 'hideTool/editHideTool':
-            return {
-                ...state,
-                hideTool: action.payload,
-            };
-        case 'sortTool':
-            return {
-                ...state,
-                sortTool: action.payload,
-            };
         case 'addTaskTable':
             return {
                 ...state,
@@ -61,6 +56,31 @@ const rootReducer = (state = initState, action) => {
             return {
                 ...state,
                 searchTaskTable: action.payload,
+            };
+        case 'filterTool/groupFilter':
+            return {
+                ...state,
+                filterTool: { ...state.filterTool, groupFilter: action.payload },
+            };
+        case 'filterTool/statusFilter':
+            return {
+                ...state,
+                filterTool: { ...state.filterTool, statusFilter: action.payload },
+            };
+        case 'filterTool/dueDateFilter':
+            return {
+                ...state,
+                filterTool: { ...state.filterTool, dueDateFilter: action.payload },
+            };
+        case 'hideTool/editHideTool':
+            return {
+                ...state,
+                hideTool: action.payload,
+            };
+        case 'sortTool':
+            return {
+                ...state,
+                sortTool: action.payload,
             };
         default:
             return state;

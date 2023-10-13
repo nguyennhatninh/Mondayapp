@@ -19,20 +19,6 @@ export const editTaskBoard = (data) => {
     };
 };
 
-export const editHideTool = (data) => {
-    return {
-        type: 'hideTool/editHideTool',
-        payload: data,
-    };
-};
-
-export const sortTool = (data) => {
-    return {
-        type: 'sortTool',
-        payload: data,
-    };
-};
-
 export const addTaskTable = (data) => {
     return {
         type: 'addTaskTable',
@@ -47,6 +33,41 @@ export const resetTaskTable = () => {
 export const searchTaskTable = (data) => {
     return {
         type: 'searchTaskTable',
+        payload: data,
+    };
+};
+
+export const groupFilter = (data) => {
+    return {
+        type: 'filterTool/groupFilter',
+        payload: data,
+    };
+};
+
+export const statusFilter = (data) => {
+    return {
+        type: 'filterTool/statusFilter',
+        payload: data,
+    };
+};
+
+export const dueDateFilter = (data) => {
+    return {
+        type: 'filterTool/dueDateFilter',
+        payload: data,
+    };
+};
+
+export const editHideTool = (data) => {
+    return {
+        type: 'hideTool/editHideTool',
+        payload: data,
+    };
+};
+
+export const sortTool = (data) => {
+    return {
+        type: 'sortTool',
         payload: data,
     };
 };

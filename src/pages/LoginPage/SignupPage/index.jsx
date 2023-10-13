@@ -2,8 +2,8 @@ import classNames from 'classnames/bind';
 
 import styles from '../LoginPage.module.scss';
 import Button from '~/components/Button/Button';
-import LoginSupport from '~/pages/LoginPage/LoginSupport';
-import LoginForm from '~/pages/LoginPage/LoginForm';
+import RegisterSupport from '~/pages/LoginPage/RegisterSupport';
+import RegisterForm from '~/pages/LoginPage/RegisterForm';
 
 const cx = classNames.bind(styles);
 
@@ -15,7 +15,7 @@ function SignupPage() {
                     <h1 className={cx('login-title')}>
                         <b>Sign </b>Up
                     </h1>
-                    <LoginForm signup></LoginForm>
+                    <RegisterForm signup></RegisterForm>
                     <div className={cx('login-separator')}>
                         <span className={cx('separator-line')}></span>
                         <div>Or </div>
@@ -29,14 +29,14 @@ function SignupPage() {
                             Continue with Google
                         </Button>
                     </div>
-                    <LoginSupport>By proceeding, you agree to the</LoginSupport>
-                    <LoginSupport link="Privacy Policy." otherLink="Terms of Service" href="./">
+                    <RegisterSupport>By proceeding, you agree to the</RegisterSupport>
+                    <RegisterSupport link="Privacy Policy." otherLink="Terms of Service" href="./">
                         and
-                    </LoginSupport>
+                    </RegisterSupport>
                     <div style={{ height: 30 }}></div>
-                    <LoginSupport link="Login" href="./login">
+                    <RegisterSupport link="Login" href="./login">
                         Already have an account?
-                    </LoginSupport>
+                    </RegisterSupport>
                 </div>
             </div>
         </div>

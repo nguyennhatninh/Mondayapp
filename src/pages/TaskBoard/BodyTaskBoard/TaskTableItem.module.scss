@@ -3,9 +3,10 @@
     align-items: center;
 }
 .task-table-container {
-    width: 70%;
     display: flex;
     justify-content: space-between;
+    width: 70%;
+    min-height: 31px;
     font-size: 1.4rem;
     color: #333;
     border: 1px solid var(--color-border);
@@ -55,7 +56,7 @@
         background-color: #f5f6f8;
     }
     &:focus-within {
-        background-color: #cce5ff;
+        background-color: var(--color-active);
     }
 }
 .table-info-item.date {
@@ -175,10 +176,10 @@
         background-color: $color-value;
     }
 }
-@include status-color('grey', #c4c4c4);
-@include status-color('green', #00c875);
-@include status-color('yellow', #fdab3d);
-@include status-color('red', #e44258);
+@include status-color('color3', #c4c4c4);
+@include status-color('color0', #00c875);
+@include status-color('color1', #fdab3d);
+@include status-color('color2', #e44258);
 
 .table-item-close {
     font-size: 1.3rem;

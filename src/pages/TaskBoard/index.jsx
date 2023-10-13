@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useEffect } from 'react';
 import TaskBoardEmpty from '~/layouts/components/Sidebar/TaskBoardList/TaskBoardEmpty';
+import { useSelector } from 'react-redux';
+import { groupFilterSelector } from '~/redux/selectors';
 
 const cx = classNames.bind(styles);
 
@@ -21,6 +23,8 @@ function TaskBoard({ title, main, indexTB }) {
             (main ? ['This week', ' Next Week'] : [' Table Title', ' Table Title']),
     );
     const [showTablesIndex, setShowTablesIndex] = useState([]);
+
+    const groupFilterData = useSelector(groupFilterSelector);
 
     useEffect(() => {
         localStorage.setItem(`tables${indexTB}`, JSON.stringify(tables));
@@ -77,7 +81,8 @@ function TaskBoard({ title, main, indexTB }) {
         }
     };
     const handleCheckAllIndex = (arr) => {
-        return [0, 1, 2].every((element) => arr.includes(element));
+        const indexArrTables = [...Array(tables.length).keys()];
+        return indexArrTables.every((element) => arr.includes(element));
     };
 
     return (
@@ -100,7 +105,10 @@ function TaskBoard({ title, main, indexTB }) {
                                 title={table}
                                 handleChangeValueTable={handleChangeValueTable}
                                 handleDeleteTable={handleDeleteTable}
-                                hide={showTablesIndex.includes(index)}
+                                hide={
+                                    showTablesIndex.includes(index) ||
+                                    (groupFilterData.index !== null && index !== groupFilterData.index)
+                                }
                             >
                                 <TaskTableBody
                                     indexTB={indexTB}

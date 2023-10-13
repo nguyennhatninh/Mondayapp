@@ -51,7 +51,7 @@
         }
     }
     .task-board-item.to.active {
-        background-color: #cce5ff;
+        background-color: var(--color-active);
         border-radius: 4px;
     }
 }

@@ -18,14 +18,14 @@
                     font-weight: bold;
                 }
             }
-            .login-form {
-                .login-content-item {
+            .register-form {
+                .register-content-item {
                     display: flex;
                     align-items: center;
                     justify-content: flex-end;
                     padding-right: 100px;
                     color: var(--color-border);
-                    .login-content-input {
+                    .register-content-input {
                         height: 40px;
                         width: 360px;
                         font-size: 1.6rem;
@@ -39,13 +39,15 @@
                             outline: none;
                         }
                     }
-                    .login-content-input.error-message {
+                    .register-content-input.error-message {
                         border: 1px solid red;
                     }
                 }
-                .login-content-error {
+                .register-content-error {
                     font-size: 1.2rem;
                     color: red;
+                    height: 20px;
+                    padding: 0 100px;
                 }
                 .forgot-password {
                     padding-left: 100px;
@@ -53,14 +55,10 @@
                     color: var(--primary);
                     font-weight: 300;
                 }
-                .login-btn {
+                .register-btn {
                     height: 48px;
                     width: 360px;
                     margin: 0 100px 32px 100px;
-                }
-                .login-content-error {
-                    height: 20px;
-                    padding: 0 100px;
                 }
             }
             .login-separator {
@@ -80,11 +78,11 @@
                 justify-content: center;
                 margin-bottom: 24px;
             }
-            .login-support {
+            .register-support {
                 display: flex;
                 justify-content: center;
                 margin-left: 4px;
-                .login-support-link {
+                .register-support-link {
                     color: var(--primary-light);
                     text-decoration: none;
                     margin-left: 4px;
