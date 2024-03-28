@@ -32,7 +32,7 @@ function LoginPage() {
                     <RegisterSupport link=" Sign up " href="./signup">
                         Don't have an account yet?
                     </RegisterSupport>
-                    <RegisterSupport link="Visit our help center" href="./">
+                    <RegisterSupport link="Visit our help center" href="./home">
                         Can't log in?
                     </RegisterSupport>
                 </div>
