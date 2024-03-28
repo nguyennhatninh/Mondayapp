@@ -87,8 +87,8 @@ function TaskTableBody({ index, indexTB, handleSearchTaskTable, lite, indexTable
     useEffect(() => {
         if (sortToolData.indexTB === indexTB && sortToolData.index === 0 && !lite) {
             if (sortToolData.sortToolValue !== null) {
-                sortToolData.label === 'Date' && handleDateSort(valueDate);
-                sortToolData.label === 'Status' && handleStatusSort(status);
+                sortToolData.label === 'Date' && handleDateSort([...valueDate]);
+                sortToolData.label === 'Status' && handleStatusSort([...status]);
             } else {
                 setSortedResult(taskItems);
             }
@@ -181,11 +181,7 @@ function TaskTableBody({ index, indexTB, handleSearchTaskTable, lite, indexTable
         const dataFilter = statusFilterValue.value !== null ? resultSearchTaskTable : taskItems;
         if (dueDateValue === 'Overdue') {
             dataFilter.map((item) => {
-                if (
-                    item.status !== 'Done' &&
-                    moment(item.valueDate, ['MM/DD/YY']) <
-                        moment(`${dayjs().$M + 1}-${dayjs().$D}-${dayjs().$y}`, ['MM/DD/YY'])
-                ) {
+                if (item.status !== 'Done' && dayjs(item.valueDate, ['MM/DD/YY']).isBefore(dayjs())) {
                     resultFilterDate.push(item);
                 }
                 return resultFilterDate;
@@ -258,7 +254,7 @@ function TaskTableBody({ index, indexTB, handleSearchTaskTable, lite, indexTable
 
     const handleStatusSort = (value) => {
         value.sort((a, b) => {
-            const order = ['Working on it', 'Stuck', 'Done', 'Not Started'];
+            const order = ['Done', 'Working on it', 'Stuck', 'Not Started'];
             return order.indexOf(a) - order.indexOf(b);
         });
         const indexRepeat = [];

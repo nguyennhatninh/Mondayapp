@@ -10,7 +10,7 @@ import { faSignIn } from '@fortawesome/free-solid-svg-icons';
 const cx = classNames.bind(styles);
 
 function Header() {
-    const currentUser = false;
+    const currentUser = true;
     return (
         <div className={cx('wrapper')}>
             <div className={cx('inner')}>
@@ -43,7 +43,7 @@ function Header() {
                             />
                         </div>
                     ) : (
-                        <Button href={'/login'} primary small rightIcon={<FontAwesomeIcon icon={faSignIn} />}>
+                        <Button href={'/'} primary small rightIcon={<FontAwesomeIcon icon={faSignIn} />}>
                             Log in
                         </Button>
                     )}

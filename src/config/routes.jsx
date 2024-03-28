@@ -1,7 +1,7 @@
 const routes = {
-    home: '/',
+    login: '/',
+    home: '/home',
     myWorkPage: '/myWorkPage',
-    login: '/login',
     signup: '/signup',
 };
 export default routes;
