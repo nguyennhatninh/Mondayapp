@@ -1,6 +1,6 @@
 const routes = {
-    login: '/',
-    home: '/home',
+    home: '/',
+    login: '/login',
     myWorkPage: '/myWorkPage',
     signup: '/signup',
 };

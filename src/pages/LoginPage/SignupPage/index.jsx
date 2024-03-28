@@ -34,7 +34,7 @@ function SignupPage() {
                         and
                     </RegisterSupport>
                     <div style={{ height: 30 }}></div>
-                    <RegisterSupport link="Login" href="./">
+                    <RegisterSupport link="Login" href="./login">
                         Already have an account?
                     </RegisterSupport>
                 </div>

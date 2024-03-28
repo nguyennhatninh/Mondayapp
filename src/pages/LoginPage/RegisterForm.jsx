@@ -60,7 +60,7 @@ function RegisterForm({ login, signup }) {
                     password: passwordRef.current.value,
                 },
             ]);
-            window.location.href = './';
+            window.location.href = './login';
         }
         if (login) {
             if (
@@ -69,8 +69,7 @@ function RegisterForm({ login, signup }) {
                 valueEmail.indexOf(emailRef.current.value) !== -1 &&
                 accounts[valueEmail.indexOf(emailRef.current.value)].password === passwordRef.current.value
             ) {
-                
-                window.location.href = './home';
+                window.location.href = './';
             } else if (passwordRef.current.value === '' || emailRef.current.value === '') {
                 setErrorMessageLogin('Please enter email address and a password');
             } else {
