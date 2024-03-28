@@ -67,8 +67,9 @@ function RegisterForm({ login, signup }) {
                 valueEmail.includes(emailRef.current.value) &&
                 valuePassword.includes(passwordRef.current.value) &&
                 valueEmail.indexOf(emailRef.current.value) !== -1 &&
-                valuePassword.indexOf(passwordRef.current.value) === valueEmail.indexOf(emailRef.current.value)
+                accounts[valueEmail.indexOf(emailRef.current.value)].password === passwordRef.current.value
             ) {
+                
                 window.location.href = './home';
             } else if (passwordRef.current.value === '' || emailRef.current.value === '') {
                 setErrorMessageLogin('Please enter email address and a password');
