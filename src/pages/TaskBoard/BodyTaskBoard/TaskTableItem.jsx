@@ -36,15 +36,13 @@ function TaskTableItem({
     const statesArr = ['Done', 'Working on it', 'Stuck', 'Not Started'];
     // Kiem tra cac index phan tu 0 voi cac index TableItem de xac dinh main hien thi title
     const main =
-        (`${Object.values(dataTableItemToday?.length > 0 && dataTableItemToday[0]).slice(0, 3)}` ===
+        (`${Object.values(dataTableItemToday?.length > 0 && dataTableItemToday?.[0]).slice(0, 3)}` ===
             `${indexTB},${indexParent},${indexItem}` &&
             lite) ||
-        (`${Object.values(dataTableItemThisWeek?.length > 0 && dataTableItemThisWeek[0]).slice(0, 3)}` ===
+        (`${Object.values(dataTableItemThisWeek?.length > 0 && dataTableItemThisWeek?.[0]).slice(0, 3)}` ===
             `${indexTB},${indexParent},${indexItem}` &&
             lite);
 
-    const isToday =
-        `${valueDate.$M + 1}-${valueDate.$D}-${valueDate.$y}` === `${dayjs().$M + 1}-${dayjs().$D}-${dayjs().$y}`;
     const compareDatesWithCurrent =
         moment(`${valueDate.$M + 1}-${valueDate.$D}-${valueDate.$y}`, ['MM/DD/YY']) >
         moment(`${dayjs().$M + 1}-${dayjs().$D}-${dayjs().$y}`, ['MM/DD/YY']);
@@ -63,6 +61,8 @@ function TaskTableItem({
     // Process data for MyWorkPage
     // dataToday
     useEffect(() => {
+        const isToday =
+        `${valueDate.$M + 1}-${valueDate.$D}-${valueDate.$y}` === `${dayjs().$M + 1}-${dayjs().$D}-${dayjs().$y}`;
         if (isToday) {
             const isDuplicate = dataToday.some(
                 (item) => item.indexTB === indexTB && item.indexParent === indexParent && item.index === indexItem,
@@ -170,10 +170,10 @@ function TaskTableItem({
                     />
                 </span>
                 {/* lite la phien ban hien thi ben mywork */}
-                {lite && <div className={cx('task-table-parent', main && 'Board')}>{taskBoards[indexTB].name}</div>}
+                {lite && <div className={cx('task-table-parent', main && 'Board')}>{taskBoards[indexTB]?.name}</div>}
                 {lite && (
                     <div className={cx('task-table-parent', main && 'Table')}>
-                        {JSON.parse(localStorage.getItem(`tables${indexTB}`))[indexParent]}
+                        {JSON.parse(localStorage.getItem(`tables${indexTB}`))?.[indexParent]}
                     </div>
                 )}
                 <div className={cx('task-table-info')}>

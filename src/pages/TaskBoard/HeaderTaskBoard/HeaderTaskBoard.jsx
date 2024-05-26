@@ -25,7 +25,7 @@ function HeaderTaskBoard({ handleHeaderLite, title, indexTB }) {
     }, [collapseHeader]);
 
     const listenToScroll = () => {
-        let heightToHideFrom = 76;
+        let heightToHideFrom = 40;
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
 
         if (winScroll > heightToHideFrom) {

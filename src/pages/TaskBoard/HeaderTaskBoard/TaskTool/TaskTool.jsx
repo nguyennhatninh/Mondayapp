@@ -12,6 +12,7 @@ import { addTaskTable, searchTaskTable } from '~/redux/actions';
 import SortTool from './SortTool';
 import HideTool from './HideTool';
 import FilterTool from './FilterTool';
+import PersonTool from './PersonTool';
 
 const cx = classNames.bind(styles);
 
@@ -67,6 +68,12 @@ function TaskTool({ indexTB }) {
         </div>
     );
 
+    const personTool = () => (
+        <div>
+            <PersonTool indexTB={indexTB} />
+        </div>
+    );
+
     return (
         <div className={cx('task-tool')}>
             <Button small primary onClick={() => handleAddTaskTable('New Task')}>
@@ -85,7 +92,7 @@ function TaskTool({ indexTB }) {
                 <Tippy
                     interactive
                     visible={renderToolItem.person}
-                    render={() => <div>Hello</div>}
+                    render={personTool}
                     placement="bottom"
                     onClickOutside={() => setRenderToolItem({ person: false })}
                 >
