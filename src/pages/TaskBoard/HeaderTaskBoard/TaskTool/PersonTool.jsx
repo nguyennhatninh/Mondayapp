@@ -14,8 +14,8 @@ function PersonTool() {
             <div>Filter this board by person</div>
             <div className={cx('tool-person-description')}>And find item they're working on.</div>
             <div className={cx('avatars')}>
-                {users.map((user) => (
-                    <img className={cx('avatar')} src={user} alt="" />
+                {users.map((user, id) => (
+                    <img key={id} className={cx('avatar')} src={user} alt="" />
                 ))}
             </div>
         </div>

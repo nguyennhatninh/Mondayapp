@@ -19,18 +19,18 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    .options-icon {
-        padding: 10px;
-        margin: 0 4px;
-        &:hover {
-            border-radius: 4px;
-            background-color: var(--color-hover);
-        }
-    }
 
     .header-btn {
         font-size: 1.3rem;
         font-weight: 500;
+    }
+}
+.options-icon {
+    display: none;
+}
+@media (max-width: 85.375em) {
+    .header-btn {
+        display: none !important;
     }
 }
 .logo-theme {
@@ -74,5 +74,56 @@
             height: 32px;
             border-radius: 9999px;
         }
+        &:hover {
+            cursor: pointer;
+        }
+    }
+    .menu {
+        padding: 10px 24px;
+        background-color: var(--white);
+        color: #333;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0px 0px 4px var(--color-border);
+        .menu-title {
+            display: flex;
+            align-items: center;
+            img {
+                width: 36px;
+            }
+            .menu-name-user {
+                padding-left: 4px;
+                font-size: 1.4rem;
+            }
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            font-size: 1.4rem;
+            color: #444;
+            padding: 8px 48px 8px 12px;
+            border-radius: 4px;
+            &:hover {
+                background-color: var(--color-hover);
+                cursor: pointer;
+            }
+            .menu-item-title {
+                padding-left: 8px;
+            }
+        }
+    }
+}
+@media (max-width: 46.1875em) {
+    .options-icon {
+        display: flex !important;
+        padding: 10px;
+        margin: 0 4px;
+    }
+    .header-icon {
+        display: none !important;
+    }
+    .navbar-lite {
+        background-color: var(--white);
+        box-shadow: 0px 0px 4px var(--color-border);
     }
 }

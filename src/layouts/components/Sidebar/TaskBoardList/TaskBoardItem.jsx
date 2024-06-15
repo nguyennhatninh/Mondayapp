@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { useDispatch } from 'react-redux';
 import { deleteTaskBoard, editTaskBoard } from '~/redux/actions';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -21,6 +21,17 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
     const taskBoardInput = useRef();
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setRender(false);
+        };
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     const handleDeleteTaskBoard = () => {
         dispatch(deleteTaskBoard(index));
@@ -90,9 +101,17 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
                             children
                         )}
                         {icon && (
-                            <HeadlessTippy visible={render} interactive render={renderTaskBoardEdit} placement="top">
-                                <img className={cx('icon')} src={icon} alt="" onClick={() => setRender(true)} />
-                            </HeadlessTippy>
+                            <div>
+                                <HeadlessTippy
+                                    appendTo={() => document.body}
+                                    visible={render}
+                                    interactive
+                                    render={renderTaskBoardEdit}
+                                    placement="bottom"
+                                >
+                                    <img className={cx('icon')} src={icon} alt="" onClick={() => setRender(true)} />
+                                </HeadlessTippy>
+                            </div>
                         )}
                     </span>
                 </NavLink>

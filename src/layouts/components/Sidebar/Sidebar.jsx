@@ -21,7 +21,7 @@ import TaskBoardEmpty from './TaskBoardList/TaskBoardEmpty';
 
 const cx = classNames.bind(styles);
 
-function Sidebar() {
+function Sidebar(show) {
     const [visible, setVisible] = useState(true);
 
     const taskBoards = useSelector(taskBoardsSelector);
@@ -46,7 +46,7 @@ function Sidebar() {
         setResultSearch(resultValue);
     };
     return (
-        <aside className={cx('wrapper', { visible })}>
+        <aside className={cx('wrapper', { visible }, show)}>
             <div className={cx('navbar-fixed', { visible })}>
                 {visible ? (
                     <div>
@@ -68,7 +68,7 @@ function Sidebar() {
                         </Navbar>
                         <div>
                             <div className={cx('workspace')}>
-                                <WorkChoiceIcon hover icon={images.arrowDownIcon}>
+                                <WorkChoiceIcon hover icon={images.arrowDownIcon} small>
                                     Main workspace
                                 </WorkChoiceIcon>
                                 <img className={cx('options-btn')} src={images.threeDotsIcon} alt="" />

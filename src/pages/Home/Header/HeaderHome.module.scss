@@ -28,3 +28,16 @@
         color: var(--primary);
     }
 }
+@media (max-width: 85.375em) {
+    .home-header {
+        height: 100px !important;
+    }
+}
+@media (max-width: 46.1875em) {
+    .home-header {
+        height: 160px !important;
+    }
+    .home-header-btn > :first-child {
+        display: none !important;
+    }
+}

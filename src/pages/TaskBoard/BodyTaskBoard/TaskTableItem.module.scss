@@ -189,3 +189,9 @@
     background-color: var(--color-hover);
     border-radius: 4px;
 }
+
+@media (max-width: 85.375em) {
+    .task-table-container {
+        width: 92% !important;
+    }
+}

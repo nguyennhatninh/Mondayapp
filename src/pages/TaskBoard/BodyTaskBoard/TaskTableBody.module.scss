@@ -54,3 +54,10 @@
 .task-table-input.color4 {
     border-left: 6px solid #ff642e;
 }
+
+@media (max-width: 85.375em) {
+    .task-table-input {
+        width: 92% !important;
+        margin-bottom: 36px !important;
+    }
+}

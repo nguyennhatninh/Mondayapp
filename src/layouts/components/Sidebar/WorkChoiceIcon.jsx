@@ -5,17 +5,17 @@ import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
-function WorkChoiceIcon({ icon, children, hover, large }) {
+function WorkChoiceIcon({ icon, children, hover, small }) {
     return (
         <div>
             <div className={cx('workspace-choice', { hover })}>
-                <div className={cx('workspace-icon', { children })}>
-                    <span className={cx('workspace-logo', { large })}>
+                <div className={cx('workspace-icon')}>
+                    <div className={cx('workspace-logo', { small })}>
                         M
                         <img src={images.homeSolidIcon} alt="" />
-                    </span>
+                    </div>
                 </div>
-                <div className={cx('children', { large })}>{children}</div>
+                <div className={cx('children', { small })}>{children}</div>
                 {icon && <img className={cx('workspace-choice-btn')} src={icon} alt="" />}
             </div>
         </div>

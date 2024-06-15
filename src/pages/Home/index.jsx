@@ -61,7 +61,7 @@ function Home() {
                         </ContentItem>
                         <ContentItem iconRight={images.moreInfoIcon} icon={images.arrowRightIcon} title="My workspaces">
                             <div className={cx('my-workspace')}>
-                                <WorkChoiceIcon large>
+                                <WorkChoiceIcon>
                                     <div>
                                         Main workspace
                                         <Logo small>Work managerment</Logo>
@@ -71,7 +71,25 @@ function Home() {
                         </ContentItem>
                     </div>
                 </div>
-                <div className={cx('right-container')}></div>
+                <div className={cx('right-container')}>
+                    <div>
+                        <h3 className={cx('right-container-title')}>Learn & get inspired</h3>
+                        <div className={cx('right-container-item')}>
+                            <img src="https://cdn.monday.com/images/learning-center/get-started-2.svg" alt="" />
+                            <div className={cx('right-container-item-content')}>
+                                <h4>Getting started</h4>
+                                <div>Learn how monday.com works</div>
+                            </div>
+                        </div>
+                        <div className={cx('right-container-item')}>
+                            <img src="https://cdn.monday.com/images/learning-center/help-center.svg" alt="" />
+                            <div className={cx('right-container-item-content')}>
+                                <h4>Help center</h4>
+                                <div>Learn and get support</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

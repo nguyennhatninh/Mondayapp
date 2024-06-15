@@ -9,7 +9,7 @@ function NavbarItem({ icon, children, to }) {
     return (
         <NavLink className={(nav) => cx('navbar-item', { active: nav.isActive })} to={to}>
             {icon && <img src={icon} alt="" />}
-            {children}
+            <div className={cx('navbar-item-content')}>{children}</div>
         </NavLink>
     );
 }

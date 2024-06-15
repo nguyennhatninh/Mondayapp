@@ -204,3 +204,11 @@
         padding-right: 4px;
     }
 }
+@media (max-width: 85.375em) {
+    .table-header {
+        width: 92% !important;
+    }
+    .task-table.collapsed {
+        width: 92% !important;
+    }
+}

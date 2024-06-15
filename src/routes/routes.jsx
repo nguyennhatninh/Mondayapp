@@ -2,8 +2,8 @@ import { DefaultLayouts, RegisterLayout } from '~/layouts';
 import config from '~/config';
 import Home from '~/pages/Home';
 import MyWorkPage from '~/pages/MyWorkPage';
-import LoginPage from '~/pages/LoginPage';
-import SignupPage from '~/pages/LoginPage/SignupPage';
+import LoginPage from '~/pages/AuthPage/login';
+import SignupPage from '~/pages/AuthPage/signup';
 
 // Public Routes
 const publicRoutes = [

@@ -8,3 +8,9 @@
     border-top-left-radius: 8px;
     overflow: auto;
 }
+
+@media (max-width: 85.375em) {
+    .content {
+        width: calc(100% - 172px);
+    }
+}
