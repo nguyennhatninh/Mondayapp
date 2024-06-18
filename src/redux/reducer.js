@@ -12,6 +12,7 @@ const initState = {
     hideTool: { index: null, hideToolValue: [true, true, true] },
     sortTool: { index: null, indexTB: null, sortToolValue: null, label: '' },
     login: !!localStorage.getItem('access_token'),
+    requireLogin: false,
 };
 
 const rootReducer = (state = initState, action) => {
@@ -19,7 +20,18 @@ const rootReducer = (state = initState, action) => {
         case 'logout':
             return {
                 ...state,
-                login: { userInfo: {}, status: action.payload },
+                login: action.payload,
+            };
+        case 'requireLogin':
+            return {
+                ...state,
+                requireLogin: action.payload,
+            };
+        case 'taskBoards/addTaskBoard':
+            localStorage.setItem('TaskBoards', JSON.stringify([...state.taskBoards, action.payload]));
+            return {
+                ...state,
+                taskBoards: [...state.taskBoards, action.payload],
             };
         case 'taskBoards/deleteTaskBoard':
             const taskBoardDelelte = [...state.taskBoards];
@@ -29,7 +41,6 @@ const rootReducer = (state = initState, action) => {
                 ...state,
                 taskBoards: [...taskBoardDelelte],
             };
-
         case 'taskBoards/editTaskBoard':
             const updatedTaskBoards = state.taskBoards.map((item, index) => {
                 if (index === action.payload.index) {

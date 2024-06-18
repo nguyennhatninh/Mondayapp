@@ -15,13 +15,14 @@ import WorkChoiceIcon from './WorkChoiceIcon';
 import TaskBoardList from './TaskBoardList/TaskBoardList';
 import TaskBoardItem from './TaskBoardList/TaskBoardItem';
 import Search from '~/components/Search/Search';
-import { addTaskBoard } from '~/redux/actions';
+import { addTaskBoard, requireLogin } from '~/redux/actions';
 import { taskBoardsSelector } from '~/redux/selectors';
 import TaskBoardEmpty from './TaskBoardList/TaskBoardEmpty';
 
 const cx = classNames.bind(styles);
 
 function Sidebar(show) {
+    const isLogin = !!localStorage.getItem('access_token');
     const [visible, setVisible] = useState(true);
 
     const taskBoards = useSelector(taskBoardsSelector);
@@ -33,13 +34,17 @@ function Sidebar(show) {
 
     const dispatch = useDispatch();
     const handleAddTaskBoard = () => {
-        dispatch(
-            addTaskBoard({
-                id: uuidv4(),
-                name: 'New Task Board',
-                config: `/TaskBoard/${uuidv4()}`,
-            }),
-        );
+        if (isLogin) {
+            dispatch(
+                addTaskBoard({
+                    id: uuidv4(),
+                    name: 'New Task Board',
+                    config: `/TaskBoard/${uuidv4()}`,
+                }),
+            );
+        } else {
+            dispatch(requireLogin(true));
+        }
     };
     const handleSetInputValue = (value) => {
         const resultValue = taskBoards.filter((taskBoard) => taskBoard.name.includes(value));

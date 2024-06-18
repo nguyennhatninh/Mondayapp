@@ -29,7 +29,8 @@ function LoginPage() {
             );
 
             const data = await response.data;
-            localStorage.setItem('accessToken', data.access_token);
+            localStorage.setItem('access_token', data.access_token);
+            window.location.href = '/';
         } catch (error) {
             console.error('Error logging in with Google:', error);
         }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import dayjs from 'dayjs';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment/moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faEllipsis } from '@fortawesome/free-solid-svg-icons';
@@ -10,15 +10,18 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 import styles from './TaskTableHeader.module.scss';
 import { hideToolSelector } from '~/redux/selectors';
+import { requireLogin } from '~/redux/actions';
 
 const cx = classNames.bind(styles);
 
 function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTable, handleDeleteTable, hide }) {
+    const isLogin = !!localStorage.getItem('access_token');
     const states = ['Done', 'Working on it', 'Stuck', 'Not Started'];
     const tableItemData = JSON.parse(localStorage.getItem(`taskItems-${indexTB}-${index}`));
     const status = tableItemData?.map((item) => item.status);
     const valueDate = tableItemData?.map((item) => item.valueDate);
 
+    const dispatch = useDispatch();
     const hideTool = useSelector(hideToolSelector);
 
     const [show, setShow] = useState(true);
@@ -46,8 +49,12 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
             <div
                 className={cx('table-panel-item')}
                 onClick={() => {
-                    inputRef.current.focus();
-                    setRender(false);
+                    if (isLogin) {
+                        inputRef.current.focus();
+                        setRender(false);
+                    } else {
+                        dispatch(requireLogin(true));
+                    }
                 }}
             >
                 <FontAwesomeIcon icon={faPenToSquare} />
@@ -56,8 +63,12 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
             <div
                 className={cx('table-panel-item')}
                 onClick={() => {
-                    handleDeleteTable(index);
-                    setRender(false);
+                    if (isLogin) {
+                        handleDeleteTable(index);
+                        setRender(false);
+                    } else {
+                        dispatch(requireLogin(true));
+                    }
                 }}
             >
                 <FontAwesomeIcon icon={faTrashCan} />

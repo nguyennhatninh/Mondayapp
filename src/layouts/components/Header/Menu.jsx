@@ -1,42 +1,22 @@
 import classNames from 'classnames/bind';
-
-import styles from './Header.module.scss';
+import { jwtDecode } from 'jwt-decode';
+import { useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignIn } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan, faUser } from '@fortawesome/free-regular-svg-icons';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+
+import styles from './Header.module.scss';
 import { logout } from '~/redux/actions';
 
 const cx = classNames.bind(styles);
 
 function Menu() {
-    const [name, setName] = useState('');
-    const access_token = localStorage.getItem('access_token');
     const dispatch = useDispatch();
-    const handelGetInfoUser = async () => {
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_SERVER}/user/me`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${access_token}`,
-                },
-            });
-            const data = await response.data.data;
-            return data;
-        } catch (e) {
-            handleLogout();
-        }
-    };
-    useEffect(() => {
-        async function fetchData() {
-            const info = await handelGetInfoUser();
-            setName(info?.name);
-        }
-        fetchData();
-    }, []);
+    const access_token = localStorage.getItem('access_token');
+    let decoded;
+    access_token && (decoded = jwtDecode(access_token));
+    const name = decoded?.username;
+
     const handleLogout = () => {
         window.location.href = '/';
         localStorage.removeItem('access_token');

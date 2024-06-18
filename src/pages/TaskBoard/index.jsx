@@ -9,12 +9,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useEffect } from 'react';
 import TaskBoardEmpty from '~/layouts/components/Sidebar/TaskBoardList/TaskBoardEmpty';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { groupFilterSelector } from '~/redux/selectors';
+import { requireLogin } from '~/redux/actions';
 
 const cx = classNames.bind(styles);
 
 function TaskBoard({ title, main, indexTB }) {
+    const isLogin = !!localStorage.getItem('access_token');
     const keys = ['status', 'taskItems', 'date'];
 
     const [lite, setLite] = useState(false);
@@ -23,7 +25,7 @@ function TaskBoard({ title, main, indexTB }) {
             (main ? ['This week', ' Next Week'] : [' Table Title', ' Table Title']),
     );
     const [showTablesIndex, setShowTablesIndex] = useState([]);
-
+    const dispatch = useDispatch();
     const groupFilterData = useSelector(groupFilterSelector);
 
     useEffect(() => {
@@ -44,7 +46,11 @@ function TaskBoard({ title, main, indexTB }) {
     };
 
     const handleAddTable = () => {
-        setTables((prev) => [...prev, ' Table Title']);
+        if (isLogin) {
+            setTables((prev) => [...prev, ' Table Title']);
+        } else {
+            dispatch(requireLogin(true));
+        }
     };
 
     const handleDeleteTable = (index) => {

@@ -13,13 +13,14 @@ import {
     sortToolSelector,
     statusFilterSelector,
 } from '~/redux/selectors';
-import { resetTaskTable } from '~/redux/actions';
+import { requireLogin, resetTaskTable } from '~/redux/actions';
 import moment from 'moment';
 
 const cx = classNames.bind(styles);
 
 function TaskTableBody({ index, indexTB, handleSearchTaskTable, lite, indexTableItem }) {
     dayjs.extend(weekOfYear);
+    const isLogin = !!localStorage.getItem('access_token');
 
     const taskItemNameMemory = `taskItems-${indexTB}-${index}`;
     // fix value 'undefined' to undefined for dayjs()
@@ -116,11 +117,18 @@ function TaskTableBody({ index, indexTB, handleSearchTaskTable, lite, indexTable
         setNewTaskItem(e.target.value);
     };
     const handleAddTask = (e) => {
-        if (newTaskItem !== '') {
-            setTaskItems((prev) => [...prev, { valueTask: newTaskItem, valueDate: undefined, status: 'Not Started' }]);
+        if (isLogin) {
+            if (newTaskItem !== '') {
+                setTaskItems((prev) => [
+                    ...prev,
+                    { valueTask: newTaskItem, valueDate: undefined, status: 'Not Started' },
+                ]);
+            }
+            setNewTaskItem('');
+            e.target.focus();
+        } else {
+            dispatch(requireLogin(true));
         }
-        setNewTaskItem('');
-        e.target.focus();
     };
     const handleClearTask = (index) => {
         if (taskItems.length === 1) {

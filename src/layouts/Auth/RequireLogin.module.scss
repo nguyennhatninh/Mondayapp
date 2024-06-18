@@ -1,0 +1,28 @@
+.overlay.show {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(transparent, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    .login-message {
+        background: var(--white);
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+        h3 {
+            padding-bottom: 18px;
+        }
+        .login-message-button {
+            padding: 8px 12px;
+            text-decoration: none;
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 4px;
+        }
+    }
+}

@@ -5,20 +5,55 @@ import images from '~/assets/images';
 import Button from '~/components/Button/Button';
 import Logo from '~/components/Logo/Logo';
 import Tippy from '@tippyjs/react/headless';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Menu from './Menu';
 import { loginSelector } from '~/redux/selectors';
 import { useSelector } from 'react-redux';
-import Sidebar from '../Sidebar';
 import Navbar, { NavbarItem } from '../Sidebar/Navbar';
 import config from '~/config';
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
 function Header() {
+    const isLogin = useSelector(loginSelector);
+    const access_token = localStorage.getItem('access_token');
     const [renderMenu, setRenderMenu] = useState(false);
     const [renderSidebar, setRenderSidebar] = useState(false);
-    const isLogin = useSelector(loginSelector);
+    const [userInfo, setUserInfo] = useState('');
+
+    const handelGetInfoUser = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_SERVER}/user/me`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${access_token}`,
+                },
+            });
+            const data = await response.data.data;
+            return data;
+        } catch (e) {
+            console.log(e);
+        }
+    };
+    useEffect(() => {
+        async function fetchData() {
+            const info = await handelGetInfoUser();
+            setUserInfo(info);
+        }
+        fetchData();
+    }, []);
+
+    const firstLetterLastName = userInfo && userInfo.name.split(' ').pop().charAt(0).toUpperCase();
+    const getRandomColor = () => {
+        const letters = '234567';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 6)];
+        }
+        return color;
+    };
+    const backgroundColor = getRandomColor();
 
     const contentMenu = () => (
         <div>
@@ -37,7 +72,7 @@ function Header() {
             </Navbar>
         </div>
     );
-    console.log(renderSidebar);
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('inner')}>
@@ -83,11 +118,16 @@ function Header() {
                                         src="https://cdn.monday.com/images/logos/monday_logo_icon.png"
                                         alt=""
                                     ></img>
-                                    <img
-                                        className={cx('avarta')}
-                                        src="https://files.monday.com/use1/photos/43954248/thumb/43954248-user_photo_initials_2023_05_31_15_01_39.png?1685545299"
-                                        alt=""
-                                    />
+                                    {userInfo.avatar ? (
+                                        <img className={cx('avarta')} src={userInfo.avatar} alt="" />
+                                    ) : (
+                                        <div
+                                            className={cx('avarta-custom')}
+                                            style={{ backgroundColor: backgroundColor }}
+                                        >
+                                            {firstLetterLastName}
+                                        </div>
+                                    )}
                                 </div>
                             </Tippy>
                         </div>

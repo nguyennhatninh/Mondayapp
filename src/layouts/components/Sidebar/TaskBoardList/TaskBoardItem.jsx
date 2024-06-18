@@ -9,12 +9,13 @@ import styles from './TaskBoardList.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { useDispatch } from 'react-redux';
-import { deleteTaskBoard, editTaskBoard } from '~/redux/actions';
+import { deleteTaskBoard, editTaskBoard, requireLogin } from '~/redux/actions';
 import { useEffect, useRef, useState } from 'react';
 
 const cx = classNames.bind(styles);
 
 function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink }) {
+    const isLogin = !!localStorage.getItem('access_token');
     const [inputTaskBoard, setinputTaskBoard] = useState(false);
     const [valueTaskBoardInput, setValueTaskBoardInput] = useState(children);
     const [render, setRender] = useState(false);
@@ -34,16 +35,24 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
     }, []);
 
     const handleDeleteTaskBoard = () => {
-        dispatch(deleteTaskBoard(index));
-        localStorage.removeItem(`tables${index}`);
+        if (isLogin) {
+            dispatch(deleteTaskBoard(index));
+            localStorage.removeItem(`tables${index}`);
+        } else {
+            dispatch(requireLogin(true));
+        }
     };
 
     const handleSwapInput = () => {
-        setinputTaskBoard(true);
-        setRender(false);
-        setTimeout(() => {
-            taskBoardInput.current.focus();
-        }, 0);
+        if (isLogin) {
+            setinputTaskBoard(true);
+            setRender(false);
+            setTimeout(() => {
+                taskBoardInput.current.focus();
+            }, 0);
+        } else {
+            dispatch(requireLogin(true));
+        }
     };
     const handleEditTaskBoard = () => {
         setinputTaskBoard(false);
@@ -103,11 +112,11 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
                         {icon && (
                             <div>
                                 <HeadlessTippy
-                                    appendTo={() => document.body}
+                                    // appendTo={() => document.body}
                                     visible={render}
                                     interactive
                                     render={renderTaskBoardEdit}
-                                    placement="bottom"
+                                    placement="bottom-end"
                                 >
                                     <img className={cx('icon')} src={icon} alt="" onClick={() => setRender(true)} />
                                 </HeadlessTippy>
