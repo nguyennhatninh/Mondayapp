@@ -43,7 +43,7 @@ function Header() {
         }
         fetchData();
     }, []);
-
+    console.log(userInfo?.avatar);
     const firstLetterLastName = userInfo && userInfo.name.split(' ').pop().charAt(0).toUpperCase();
     const getRandomColor = () => {
         const letters = '234567';
@@ -118,8 +118,8 @@ function Header() {
                                         src="https://cdn.monday.com/images/logos/monday_logo_icon.png"
                                         alt=""
                                     ></img>
-                                    {userInfo.avatar ? (
-                                        <img className={cx('avarta')} src={userInfo.avatar} alt="" />
+                                    {userInfo?.avatar ? (
+                                        <img className={cx('avarta')} src={userInfo?.avatar} alt="" />
                                     ) : (
                                         <div
                                             className={cx('avarta-custom')}
