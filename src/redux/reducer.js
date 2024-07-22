@@ -1,6 +1,6 @@
 const initState = {
     taskBoards: JSON.parse(localStorage.getItem(`TaskBoards`)) || [
-        { id: 1, name: 'ninh', config: '/taskBoard/221228712000' },
+        { id: 1, name: 'Your Workspace', config: '/taskBoard/221228712000' },
     ],
     addTaskTable: [],
     searchTaskTable: { value: null, index: null },
@@ -12,7 +12,7 @@ const initState = {
     hideTool: { index: null, hideToolValue: [true, true, true] },
     sortTool: { index: null, indexTB: null, sortToolValue: null, label: '' },
     login: !!localStorage.getItem('access_token'),
-    requireLogin: false,
+    require: { name: '', status: false, description: '', button: '' },
 };
 
 const rootReducer = (state = initState, action) => {
@@ -22,10 +22,21 @@ const rootReducer = (state = initState, action) => {
                 ...state,
                 login: action.payload,
             };
-        case 'requireLogin':
+        case 'require/login':
             return {
                 ...state,
-                requireLogin: action.payload,
+                require: action.payload,
+            };
+        case 'require/other':
+            if (typeof action.payload === 'boolean') {
+                return {
+                    ...state,
+                    require: { ...state.require, status: action.payload },
+                };
+            }
+            return {
+                ...state,
+                require: action.payload,
             };
         case 'taskBoards/addTaskBoard':
             localStorage.setItem('TaskBoards', JSON.stringify([...state.taskBoards, action.payload]));

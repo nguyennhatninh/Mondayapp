@@ -1,5 +1,7 @@
 import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 import styles from './Home.module.scss';
 import HeaderHome from './Header/HeaderHome';
@@ -9,12 +11,15 @@ import TaskBoardItem from '~/layouts/components/Sidebar/TaskBoardList/TaskBoardI
 import Logo from '~/components/Logo/Logo';
 import WorkChoiceIcon from '~/layouts/components/Sidebar/WorkChoiceIcon';
 import { taskBoardsSelector } from '~/redux/selectors';
-import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
 function Home() {
     const taskBoards = useSelector(taskBoardsSelector);
+    const access_token = localStorage.getItem('access_token');
+    let decoded;
+    access_token && (decoded = jwtDecode(access_token));
+    const name = decoded?.username;
     return (
         <div className={cx('wrapper')}>
             <HeaderHome></HeaderHome>
@@ -38,26 +43,28 @@ function Home() {
                                 ))}
                             </div>
                         </ContentItem>
-                        <ContentItem icon={images.arrowRightIcon} notify title="Inbox">
-                            <div className={cx('inbox')}>
-                                <div className={cx('inbox-item')}>
-                                    <img
-                                        className={cx('inbox-image')}
-                                        src="https://cdn.monday.com/images/damann.jpg"
-                                        alt=""
-                                    ></img>
-                                    <div className={cx('inbox-content')}>
-                                        <div>Roy Mann</div>
-                                        <div>
-                                            Hi <a href="/">@Ninh</a>,
+                        <ContentItem icon={images.arrowRightIcon} notify={!!name} title="Inbox">
+                            {!!name && (
+                                <div className={cx('inbox')}>
+                                    <div className={cx('inbox-item')}>
+                                        <img
+                                            className={cx('inbox-image')}
+                                            src="https://static.topcv.vn/user_avatars/atTXHZXWqi8iuPImYbP0_631ca18c66da7_av.jpg"
+                                            alt=""
+                                        ></img>
+                                        <div className={cx('inbox-content')}>
+                                            <div>Ninh</div>
+                                            <div>
+                                                Hi <a href="./">{`@${name}`}</a>,
+                                            </div>
+                                        </div>
+                                        <div className={cx('inbox-timed')}>
+                                            <img src={images.clockIcon} alt=""></img>
+                                            {'6d'}
                                         </div>
                                     </div>
-                                    <div className={cx('inbox-timed')}>
-                                        <img src={images.clockIcon} alt=""></img>
-                                        {'6d'}
-                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </ContentItem>
                         <ContentItem iconRight={images.moreInfoIcon} icon={images.arrowRightIcon} title="My workspaces">
                             <div className={cx('my-workspace')}>

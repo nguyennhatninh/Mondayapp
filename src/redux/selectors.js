@@ -7,4 +7,4 @@ export const statusFilterSelector = (state) => state.filterTool.statusFilter;
 export const hideToolSelector = (state) => state.hideTool;
 export const sortToolSelector = (state) => state.sortTool;
 export const loginSelector = (state) => state.login;
-export const requireLoginSelector = (state) => state.requireLogin;
+export const requireSelector = (state) => state.require;

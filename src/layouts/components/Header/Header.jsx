@@ -33,7 +33,11 @@ function Header() {
             const data = await response.data.data;
             return data;
         } catch (e) {
-            console.log(e);
+            if (e.response.status === 401) {
+                console.log('Protected data:', e);
+            } else {
+                console.error('Fetch data error:', e);
+            }
         }
     };
     useEffect(() => {
@@ -42,9 +46,9 @@ function Header() {
             setUserInfo(info);
         }
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    console.log(userInfo?.avatar);
-    const firstLetterLastName = userInfo && userInfo.name.split(' ').pop().charAt(0).toUpperCase();
+    const firstLetterLastName = userInfo && userInfo?.name.split(' ').pop().charAt(0).toUpperCase();
     const getRandomColor = () => {
         const letters = '234567';
         let color = '#';
@@ -54,7 +58,6 @@ function Header() {
         return color;
     };
     const backgroundColor = getRandomColor();
-
     const contentMenu = () => (
         <div>
             <Menu />
@@ -119,7 +122,7 @@ function Header() {
                                         alt=""
                                     ></img>
                                     {userInfo?.avatar ? (
-                                        <img className={cx('avarta')} src={userInfo?.avatar} alt="" />
+                                        <img className={cx('avarta')} src={userInfo.avatar} alt="" />
                                     ) : (
                                         <div
                                             className={cx('avarta-custom')}

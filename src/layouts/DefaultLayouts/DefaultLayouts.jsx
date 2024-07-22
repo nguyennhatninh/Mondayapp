@@ -3,14 +3,14 @@ import classNames from 'classnames/bind';
 import Header from '~/layouts/components/Header';
 import Sidebar from '~/layouts/components/Sidebar';
 import styles from './DefaultLayouts.module.scss';
-import RequireLogin from '../Auth/RequireLogin';
+import Require from '../Auth/Require';
 import { useSelector } from 'react-redux';
-import { requireLoginSelector } from '~/redux/selectors';
+import { requireSelector } from '~/redux/selectors';
 
 const cx = classNames.bind(styles);
 function DefaultLayout({ children }) {
-    const showRequireLogin = useSelector(requireLoginSelector);
-    console.log(showRequireLogin);
+    const require = useSelector(requireSelector);
+
     return (
         <div className={cx('wrapper')}>
             <Header />
@@ -19,7 +19,7 @@ function DefaultLayout({ children }) {
                 <Sidebar />
                 <div className={cx('content')}>{children}</div>
             </div>
-            <RequireLogin show={showRequireLogin} />
+            <Require show={require.status} description={require.description} button={require.button} />
         </div>
     );
 }

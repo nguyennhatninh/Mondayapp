@@ -44,12 +44,7 @@ function App() {
                                 element={
                                     <DefaultLayout>
                                         <IndexContext.Provider value={index}>
-                                            <TaskBoard
-                                                indexTB={index}
-                                                key={index}
-                                                title={item.name}
-                                                main={index === 0}
-                                            />
+                                            <TaskBoard indexTB={index} key={index} title={item.name} />
                                         </IndexContext.Provider>
                                     </DefaultLayout>
                                 }

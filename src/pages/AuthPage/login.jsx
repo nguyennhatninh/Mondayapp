@@ -1,12 +1,12 @@
 import classNames from 'classnames/bind';
+import axios from 'axios';
+import { signInWithPopup } from 'firebase/auth';
 
 import styles from './LoginPage.module.scss';
 import RegisterForm from './RegisterForm';
 import Button from '~/components/Button/Button';
 import RegisterSupport from './RegisterSupport';
-import { auth, googleProvider } from '../../firebaseConfig';
-import { signInWithPopup } from 'firebase/auth';
-import axios from 'axios';
+import { auth, googleProvider } from '~/firebaseConfig';
 
 const cx = classNames.bind(styles);
 
@@ -59,7 +59,7 @@ function LoginPage() {
                     <RegisterSupport link=" Sign up " href="./signup">
                         Don't have an account yet?
                     </RegisterSupport>
-                    <RegisterSupport link="Visit our help center" href="./">
+                    <RegisterSupport link="Visit our help center" href="">
                         Can't log in?
                     </RegisterSupport>
                 </div>

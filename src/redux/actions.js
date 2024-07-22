@@ -6,12 +6,19 @@ export const logout = (data) => {
 };
 
 export const requireLogin = (data) => {
+    const defaultData = { name: 'login', description: 'You need to log in to continue', status: data, button: 'Login' };
     return {
-        type: 'requireLogin',
-        payload: data,
+        type: 'require/login',
+        payload: defaultData,
     };
 };
 
+export const requireOther = (data) => {
+    return {
+        type: 'require/other',
+        payload: data,
+    };
+};
 export const addTaskBoard = (data) => {
     return {
         type: 'taskBoards/addTaskBoard',

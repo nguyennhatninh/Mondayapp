@@ -18,11 +18,21 @@
             padding-bottom: 18px;
         }
         .login-message-button {
+            display: inline-block;
             padding: 8px 12px;
-            text-decoration: none;
             background-color: var(--primary);
             color: var(--white);
             border-radius: 4px;
         }
+    }
+}
+@media (max-width: 85.375em) {
+    .login-message {
+        width: 80% !important;
+    }
+}
+@media (max-width: 46.1875em) {
+    .login-message {
+        width: 70% !important;
     }
 }

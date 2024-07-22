@@ -99,7 +99,9 @@ function RegisterForm({ logIn, signup }) {
                             handleOnChange={handleOnChange}
                         />
                     ))}
-                    <div className={cx('forgot-password')}>Forgot your password ?</div>
+                    <a className={cx('forgot-password')} href="/forgotPassword">
+                        Forgot your password ?
+                    </a>
                     <Button className={cx('register-btn')} primary>
                         Login
                     </Button>
