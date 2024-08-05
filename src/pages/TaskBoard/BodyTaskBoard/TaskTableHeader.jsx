@@ -15,7 +15,7 @@ import { requireLogin } from '~/redux/actions';
 const cx = classNames.bind(styles);
 
 function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTable, handleDeleteTable, hide }) {
-    const isLogin = !!localStorage.getItem('access_token');
+    const isLogin = !!localStorage.getItem('accessToken');
     const states = ['Done', 'Working on it', 'Stuck', 'Not Started'];
     const tableItemData = JSON.parse(localStorage.getItem(`taskItems-${indexTB}-${index}`));
     const status = tableItemData?.map((item) => item.status);

@@ -16,7 +16,7 @@ import { requireLogin } from '~/redux/actions';
 const cx = classNames.bind(styles);
 
 function TaskBoard({ title, indexTB }) {
-    const isLogin = !!localStorage.getItem('access_token');
+    const isLogin = !!localStorage.getItem('accessToken');
     const keys = ['status', 'taskItems', 'date'];
 
     const [lite, setLite] = useState(false);

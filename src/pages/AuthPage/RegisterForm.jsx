@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import styles from './LoginPage.module.scss';
 import RegisterItem from './RegisterItem';
 import Button from '~/components/Button/Button';
-import axios from 'axios';
+import axiosInstance from '~/axiosConfig';
 
 const cx = classNames.bind(styles);
 
@@ -34,7 +34,7 @@ function RegisterForm({ logIn, signup }) {
         },
     };
     const handleRegister = async (userInfo) => {
-        const res = await axios.post(`${process.env.REACT_APP_SERVER}/user/register`, userInfo);
+        const res = await axiosInstance.post(`/user/register`, userInfo);
         typeof res.data.data === 'string' && setErrorMessageLogin(res.data.data);
         if (res.status === 200) {
             window.location.href = './login';
@@ -42,10 +42,10 @@ function RegisterForm({ logIn, signup }) {
     };
     const handleLogin = async (userInfo) => {
         try {
-            const res = await axios.post(`${process.env.REACT_APP_SERVER}/auth/login`, userInfo);
-
-            const dataLoginRes = res.data.data;
-            localStorage.setItem('access_token', dataLoginRes.access_token);
+            const res = await axiosInstance.post(`/auth/login`, userInfo);
+            const dataLoginRes = res.data;
+            localStorage.setItem('accessToken', dataLoginRes.accessToken);
+            localStorage.setItem('refreshToken', dataLoginRes.refreshToken);
             window.location.href = './';
         } catch (err) {
             setErrorMessageLogin(err.response.data.data);

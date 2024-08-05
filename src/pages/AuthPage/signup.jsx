@@ -1,5 +1,4 @@
 import classNames from 'classnames/bind';
-import axios from 'axios';
 import { signInWithPopup } from 'firebase/auth';
 
 import styles from './LoginPage.module.scss';
@@ -7,6 +6,7 @@ import Button from '~/components/Button/Button';
 import RegisterSupport from '~/pages/AuthPage/RegisterSupport';
 import RegisterForm from '~/pages/AuthPage/RegisterForm';
 import { auth, googleProvider } from '~/firebaseConfig';
+import axiosInstance from '~/axiosConfig';
 
 const cx = classNames.bind(styles);
 
@@ -15,21 +15,10 @@ function SignupPage() {
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const idToken = await result.user.getIdToken();
-
-            const response = await axios.post(
-                `${process.env.REACT_APP_SERVER}/auth/google`,
-                {
-                    idToken: idToken,
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                },
-            );
-
-            const data = await response.data;
-            localStorage.setItem('access_token', data.access_token);
+            const response = await axiosInstance.post('/auth/login-google', idToken);
+            const data = response.data;
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
             window.location.href = '/';
         } catch (error) {
             console.error('Error logging in with Google:', error);

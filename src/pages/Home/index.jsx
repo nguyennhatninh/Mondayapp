@@ -16,9 +16,9 @@ const cx = classNames.bind(styles);
 
 function Home() {
     const taskBoards = useSelector(taskBoardsSelector);
-    const access_token = localStorage.getItem('access_token');
+    const accessToken = localStorage.getItem('accessToken');
     let decoded;
-    access_token && (decoded = jwtDecode(access_token));
+    accessToken && (decoded = jwtDecode(accessToken));
     const name = decoded?.username;
     return (
         <div className={cx('wrapper')}>

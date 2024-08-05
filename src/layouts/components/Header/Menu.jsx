@@ -7,20 +7,24 @@ import { faTrashCan, faUser } from '@fortawesome/free-regular-svg-icons';
 
 import styles from './Header.module.scss';
 import { logout } from '~/redux/actions';
+import axiosInstance from '~/axiosConfig';
 
 const cx = classNames.bind(styles);
 
 function Menu() {
     const dispatch = useDispatch();
-    const access_token = localStorage.getItem('access_token');
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
     let decoded;
-    access_token && (decoded = jwtDecode(access_token));
+    accessToken && (decoded = jwtDecode(accessToken));
     const name = decoded?.username;
 
-    const handleLogout = () => {
-        window.location.href = '/';
-        localStorage.removeItem('access_token');
+    const handleLogout = async () => {
+        localStorage.removeItem('accessToken');
+        await axiosInstance.post('/auth/logout', { refreshToken });
+        localStorage.removeItem('refreshToken');
         dispatch(logout(false));
+        window.location.href = '/';
     };
     return (
         <div className={cx('menu')}>

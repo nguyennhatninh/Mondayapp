@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 const cx = classNames.bind(styles);
 
 function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink }) {
-    const isLogin = !!localStorage.getItem('access_token');
+    const isLogin = !!localStorage.getItem('accessToken');
     const [inputTaskBoard, setinputTaskBoard] = useState(false);
     const [valueTaskBoardInput, setValueTaskBoardInput] = useState(children);
     const [render, setRender] = useState(false);

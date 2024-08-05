@@ -3,9 +3,9 @@ import classNames from 'classnames/bind';
 import styles from './LoginPage.module.scss';
 import Button from '~/components/Button';
 import { useRef } from 'react';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { requireOther } from '~/redux/actions';
+import axiosInstance from '~/axiosConfig';
 
 const cx = classNames.bind(styles);
 
@@ -13,7 +13,7 @@ function ForgotPasswordPage() {
     const dispatch = useDispatch();
     const inputref = useRef();
     const handleSendLink = async (email) => {
-        const res = await axios.post(`${process.env.REACT_APP_SERVER}/auth/forgot-password`, { email });
+        const res = await axiosInstance.post(`/auth/forgot-password`, { email });
         if (res.status === 200) {
             dispatch(
                 requireOther({

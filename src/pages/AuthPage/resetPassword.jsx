@@ -3,10 +3,10 @@ import classNames from 'classnames/bind';
 import styles from './LoginPage.module.scss';
 import React, { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import Button from '~/components/Button';
 import { useDispatch } from 'react-redux';
 import { requireOther } from '~/redux/actions';
+import axiosInstance from '~/axiosConfig';
 
 const cx = classNames.bind(styles);
 
@@ -17,7 +17,9 @@ function ResetPassword() {
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
     const handleResetPassword = async (newPassword) => {
-        const res = await axios.post(`${process.env.REACT_APP_SERVER}/auth/reset-password/${token}`, { newPassword });
+        const res = await axiosInstance.post(`/auth/reset-password/${token}`, {
+            password: newPassword,
+        });
         if (res.status === 200) {
             dispatch(
                 requireOther({

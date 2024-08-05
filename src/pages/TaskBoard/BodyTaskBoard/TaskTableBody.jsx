@@ -20,7 +20,7 @@ const cx = classNames.bind(styles);
 
 function TaskTableBody({ index, indexTB, handleSearchTaskTable, lite, indexTableItem }) {
     dayjs.extend(weekOfYear);
-    const isLogin = !!localStorage.getItem('access_token');
+    const isLogin = !!localStorage.getItem('accessToken');
 
     const taskItemNameMemory = `taskItems-${indexTB}-${index}`;
     // fix value 'undefined' to undefined for dayjs()

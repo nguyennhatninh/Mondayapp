@@ -8,7 +8,7 @@ const cx = classNames.bind(styles);
 
 function Require({ show, description, button }) {
     const dispatch = useDispatch();
-    const isLogin = !!localStorage.getItem('access_token');
+    const isLogin = !!localStorage.getItem('accessToken');
     const handleHideOverlay = (e) => {
         if (e.target === e.currentTarget) {
             dispatch(requireLogin(false));

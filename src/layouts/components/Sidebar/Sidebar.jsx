@@ -22,7 +22,7 @@ import TaskBoardEmpty from './TaskBoardList/TaskBoardEmpty';
 const cx = classNames.bind(styles);
 
 function Sidebar(show) {
-    const isLogin = !!localStorage.getItem('access_token');
+    const isLogin = !!localStorage.getItem('accessToken');
     const [visible, setVisible] = useState(true);
 
     const taskBoards = useSelector(taskBoardsSelector);

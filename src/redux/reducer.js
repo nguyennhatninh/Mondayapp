@@ -11,7 +11,7 @@ const initState = {
     },
     hideTool: { index: null, hideToolValue: [true, true, true] },
     sortTool: { index: null, indexTB: null, sortToolValue: null, label: '' },
-    login: !!localStorage.getItem('access_token'),
+    login: !!localStorage.getItem('accessToken'),
     require: { name: '', status: false, description: '', button: '' },
 };
 

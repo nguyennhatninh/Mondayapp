@@ -11,27 +11,20 @@ import { loginSelector } from '~/redux/selectors';
 import { useSelector } from 'react-redux';
 import Navbar, { NavbarItem } from '../Sidebar/Navbar';
 import config from '~/config';
-import axios from 'axios';
+import axiosInstance from '~/axiosConfig';
 
 const cx = classNames.bind(styles);
 
 function Header() {
     const isLogin = useSelector(loginSelector);
-    const access_token = localStorage.getItem('access_token');
     const [renderMenu, setRenderMenu] = useState(false);
     const [renderSidebar, setRenderSidebar] = useState(false);
     const [userInfo, setUserInfo] = useState('');
 
     const handelGetInfoUser = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_SERVER}/user/me`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${access_token}`,
-                },
-            });
-            const data = await response.data.data;
-            return data;
+            const response = await axiosInstance.get('user/me');
+            return response.data;
         } catch (e) {
             if (e.response.status === 401) {
                 console.log('Protected data:', e);
@@ -41,11 +34,13 @@ function Header() {
         }
     };
     useEffect(() => {
-        async function fetchData() {
-            const info = await handelGetInfoUser();
-            setUserInfo(info);
+        if (isLogin) {
+            async function fetchData() {
+                const info = await handelGetInfoUser();
+                setUserInfo(info);
+            }
+            fetchData();
         }
-        fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const firstLetterLastName = userInfo && userInfo?.name.split(' ').pop().charAt(0).toUpperCase();
