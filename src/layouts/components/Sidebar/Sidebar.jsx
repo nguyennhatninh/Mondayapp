@@ -2,9 +2,6 @@ import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
-
 import images from '~/assets/images';
 import Button from '~/components/Button/Button';
 import styles from './Sidebar.module.scss';
@@ -15,41 +12,55 @@ import WorkChoiceIcon from './WorkChoiceIcon';
 import TaskBoardList from './TaskBoardList/TaskBoardList';
 import TaskBoardItem from './TaskBoardList/TaskBoardItem';
 import Search from '~/components/Search/Search';
-import { addTaskBoard, requireLogin } from '~/redux/actions';
-import { taskBoardsSelector } from '~/redux/selectors';
 import TaskBoardEmpty from './TaskBoardList/TaskBoardEmpty';
+import axiosInstance from '~/axiosConfig';
+import { useDispatch } from 'react-redux';
+import { requireLogin } from '~/redux/actions';
 
 const cx = classNames.bind(styles);
 
 function Sidebar(show) {
+    const dispatch = useDispatch();
+
     const isLogin = !!localStorage.getItem('accessToken');
     const [visible, setVisible] = useState(true);
-
-    const taskBoards = useSelector(taskBoardsSelector);
-    const [resultSearch, setResultSearch] = useState(taskBoards);
+    const [myTaskBoards, setTaskBoards] = useState([{ name: 'New Workspace' }]);
 
     useEffect(() => {
-        setResultSearch(taskBoards);
-    }, [taskBoards]);
-
-    const dispatch = useDispatch();
-    const handleAddTaskBoard = () => {
         if (isLogin) {
-            dispatch(
-                addTaskBoard({
-                    id: uuidv4(),
-                    name: 'New Task Board',
-                    config: `/TaskBoard/${uuidv4()}`,
-                }),
-            );
+            getAllTaskBoards();
+        }
+    }, [isLogin]);
+
+    useEffect(() => {
+        setTaskBoards(myTaskBoards);
+    }, [myTaskBoards]);
+
+    const handleAddTaskBoard = async () => {
+        if (isLogin) {
+            await axiosInstance.post('/workspace');
+            const data = await getAllTaskBoards();
+            setTaskBoards([...data]);
         } else {
             dispatch(requireLogin(true));
         }
     };
-    const handleSetInputValue = (value) => {
-        const resultValue = taskBoards.filter((taskBoard) => taskBoard.name.includes(value));
-        setResultSearch(resultValue);
+
+    const handleSetInputValue = async (value) => {
+        const resultValue = myTaskBoards.filter((taskBoard) => taskBoard.name.includes(value));
+        setTaskBoards(resultValue);
+        if (value === '') {
+            const data = await getAllTaskBoards();
+            setTaskBoards([...data]);
+        }
     };
+
+    const getAllTaskBoards = async () => {
+        const taskBoards = await axiosInstance.get('/user/my_workspaces');
+        setTaskBoards(taskBoards.data);
+        return taskBoards.data;
+    };
+
     return (
         <aside className={cx('wrapper', { visible }, show)}>
             <div className={cx('navbar-fixed', { visible })}>
@@ -94,12 +105,12 @@ function Sidebar(show) {
                                 </Button>
                             </div>
                             <TaskBoardList>
-                                {resultSearch && resultSearch.length > 0 ? (
-                                    resultSearch.map((taskBoard, index) => (
+                                {myTaskBoards?.length > 0 ? (
+                                    myTaskBoards.map((taskBoard, index) => (
                                         <TaskBoardItem
-                                            to={taskBoard.config}
-                                            key={taskBoard.id}
-                                            index={index}
+                                            to={`/TaskBoard/${taskBoard._id}`}
+                                            key={index}
+                                            index={taskBoard._id}
                                             hover
                                             space
                                             icon={images.threeDotsIcon}

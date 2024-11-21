@@ -2,21 +2,21 @@ import classNames from 'classnames/bind';
 import HeadlessTippy from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-
 import { NavLink } from 'react-router-dom';
 import images from '~/assets/images';
 import styles from './TaskBoardList.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { useDispatch } from 'react-redux';
-import { deleteTaskBoard, editTaskBoard, requireLogin } from '~/redux/actions';
+import { requireLogin } from '~/redux/actions';
 import { useEffect, useRef, useState } from 'react';
+import axiosInstance from '~/axiosConfig';
 
 const cx = classNames.bind(styles);
 
 function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink }) {
     const isLogin = !!localStorage.getItem('accessToken');
-    const [inputTaskBoard, setinputTaskBoard] = useState(false);
+    const [inputTaskBoard, setInputTaskBoard] = useState(false);
     const [valueTaskBoardInput, setValueTaskBoardInput] = useState(children);
     const [render, setRender] = useState(false);
     const taskBoardInput = useRef();
@@ -34,10 +34,16 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
         };
     }, []);
 
-    const handleDeleteTaskBoard = () => {
+    useEffect(() => {
+        setValueTaskBoardInput(children);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [children]);
+
+    const handleDeleteTaskBoard = async () => {
         if (isLogin) {
-            dispatch(deleteTaskBoard(index));
-            localStorage.removeItem(`tables${index}`);
+            await axiosInstance.delete(`/workspace/${index}`);
+            setRender(false);
+            window.location.href = '/';
         } else {
             dispatch(requireLogin(true));
         }
@@ -45,7 +51,7 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
 
     const handleSwapInput = () => {
         if (isLogin) {
-            setinputTaskBoard(true);
+            setInputTaskBoard(true);
             setRender(false);
             setTimeout(() => {
                 taskBoardInput.current.focus();
@@ -54,15 +60,12 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
             dispatch(requireLogin(true));
         }
     };
-    const handleEditTaskBoard = () => {
-        setinputTaskBoard(false);
+    const handleEditTaskBoard = async () => {
+        const name = taskBoardInput.current.value;
+        await axiosInstance.patch(`/workspace/${index}`, { name: name });
+        setValueTaskBoardInput(name);
+        setInputTaskBoard(false);
         setRender(false);
-        dispatch(
-            editTaskBoard({
-                index: index,
-                value: taskBoardInput.current.value,
-            }),
-        );
     };
     const renderTaskBoardEdit = () => (
         <div className={cx('edit-board')}>
@@ -83,8 +86,11 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
             event.target.value === valueTaskBoardInput
         ) {
             event.preventDefault();
+        } else {
+            window.location.href = to;
         }
     };
+
     return (
         <div className={cx('task-board', { space }, { hover })}>
             {!noLink ? (
@@ -107,7 +113,7 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
                                 onBlur={handleEditTaskBoard}
                             />
                         ) : (
-                            children
+                            valueTaskBoardInput
                         )}
                         {icon && (
                             <div>
@@ -130,7 +136,7 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
                         <img className={cx('board-item-icon', { large })} src={images.publicBoardIcon} alt="" />
                     </Tippy>
                     <span className={cx('board-item-title', { large })}>
-                        {children}
+                        {valueTaskBoardInput}
                         <img className={cx('icon')} src={images.favouriteIcon} alt="" />
                     </span>
                 </div>

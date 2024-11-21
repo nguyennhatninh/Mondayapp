@@ -54,7 +54,7 @@
         height: 22px;
         border-left: 1px solid #d0d4e4;
     }
-    .avarta-with-logo {
+    .avatar-with-logo {
         display: flex;
         height: 32px;
         margin-left: 2px;
@@ -69,21 +69,10 @@
             height: 24px;
             margin: 0 6px;
         }
-        .avarta {
+        .avatar {
             width: 32px;
             height: 32px;
             border-radius: 9999px;
-        }
-        .avarta-custom {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            font-weight: 600;
-            color: #fff;
         }
         &:hover {
             cursor: pointer;

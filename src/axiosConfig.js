@@ -22,11 +22,6 @@ axiosInstance.interceptors.request.use(
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
-        if (config.url.includes('refresh') || config.url.includes('logout')) {
-            const refreshToken = localStorage.getItem('refreshToken');
-            config.headers.Authorization = `Bearer ${refreshToken}`;
-        }
-
         return config;
     },
     (error) => {
@@ -60,11 +55,12 @@ axiosInstance.interceptors.response.use(
                 localStorage.setItem('refreshToken', data.data.refreshToken);
                 axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.data.accessToken}`;
                 isRefreshing = false;
-
                 onRefreshed(data.data.accessToken);
                 return axiosInstance(config);
             } catch (err) {
                 isRefreshing = false;
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
                 return Promise.reject(err);
             }
         }

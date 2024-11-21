@@ -1,5 +1,4 @@
 import classNames from 'classnames/bind';
-
 import styles from './Header.module.scss';
 import images from '~/assets/images';
 import Button from '~/components/Button/Button';
@@ -43,16 +42,7 @@ function Header() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const firstLetterLastName = userInfo && userInfo?.name.split(' ').pop().charAt(0).toUpperCase();
-    const getRandomColor = () => {
-        const letters = '234567';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 6)];
-        }
-        return color;
-    };
-    const backgroundColor = getRandomColor();
+
     const contentMenu = () => (
         <div>
             <Menu />
@@ -110,22 +100,21 @@ function Header() {
                                 onClickOutside={() => setRenderMenu(false)}
                                 placement="bottom-end"
                             >
-                                <div className={cx('avarta-with-logo')} onClick={() => setRenderMenu(true)}>
+                                <div className={cx('avatar-with-logo')} onClick={() => setRenderMenu(true)}>
                                     <img
                                         className={cx('logo-theme')}
                                         src="https://cdn.monday.com/images/logos/monday_logo_icon.png"
                                         alt=""
                                     ></img>
-                                    {userInfo?.avatar ? (
-                                        <img className={cx('avarta')} src={userInfo.avatar} alt="" />
-                                    ) : (
-                                        <div
-                                            className={cx('avarta-custom')}
-                                            style={{ backgroundColor: backgroundColor }}
-                                        >
-                                            {firstLetterLastName}
-                                        </div>
-                                    )}
+                                    <img
+                                        className={cx('avatar')}
+                                        src={
+                                            userInfo?.avatar
+                                                ? userInfo.avatar
+                                                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRknnc4OqRgNtBh8jwv-wY4dpK-YZ8AHDMktRa85N4YD2wp-zhQvYavkyKPtCZtC48DLrw&usqp=CAU'
+                                        }
+                                        alt=""
+                                    />
                                 </div>
                             </Tippy>
                         </div>

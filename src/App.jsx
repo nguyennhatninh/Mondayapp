@@ -1,16 +1,27 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
 import DefaultLayout from '~/layouts';
-import { useSelector } from 'react-redux';
-import { taskBoardsSelector } from './redux/selectors';
 import TaskBoard from './pages/TaskBoard';
 import { createContext } from 'react';
+import axiosInstance from './axiosConfig';
 
 export const IndexContext = createContext();
 
 function App() {
-    const taskBoards = useSelector(taskBoardsSelector);
+    const isLogin = !!localStorage.getItem('accessToken');
+    const [myTaskBoards, setTaskBoard] = useState(isLogin ? [] : [{ name: 'New Workspace' }]);
+    const getAllTaskBoards = async () => {
+        const taskBoards = await axiosInstance.get('/user/my_workspaces');
+        setTaskBoard(taskBoards.data);
+    };
+    useEffect(() => {
+        if (isLogin) {
+            getAllTaskBoards();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <Router>
             <div className="App">
@@ -36,11 +47,11 @@ function App() {
                             />
                         );
                     })}
-                    {taskBoards.map((item, index) => {
+                    {myTaskBoards.map((item, index) => {
                         return (
                             <Route
-                                key={item.id}
-                                path={item.config}
+                                key={index}
+                                path={`/TaskBoard/${item._id}`}
                                 element={
                                     <DefaultLayout>
                                         <IndexContext.Provider value={index}>
