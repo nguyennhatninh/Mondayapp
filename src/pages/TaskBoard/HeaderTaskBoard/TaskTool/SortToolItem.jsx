@@ -1,21 +1,14 @@
 import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react/headless';
-import { useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { sortTool } from '~/redux/actions';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDownShortWide, faArrowUpShortWide, faBars } from '@fortawesome/free-solid-svg-icons';
-
 import styles from './TaskTool.module.scss';
 import images from '~/assets/images';
-import { IndexContext } from '~/App';
 
 const cx = classNames.bind(styles);
 
-function SortToolItem({ icon, blur, id, index, label, onDragEnd }) {
-    const indexTB = useContext(IndexContext);
-
-    const [toolSort, setToolSort] = useState(null);
+function SortToolItem({ icon, blur, id, index, label, onDragEnd, updateStateSort, state, sortKey }) {
     const [renderToolSort, setRenderToolSort] = useState(false);
     useEffect(() => {
         if (blur) {
@@ -23,20 +16,6 @@ function SortToolItem({ icon, blur, id, index, label, onDragEnd }) {
         }
     }, [blur]);
 
-    useEffect(() => {
-        handleSortTool(toolSort);
-        return () => {
-            if (toolSort != null) {
-                handleSortTool(null);
-            }
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [toolSort]);
-    const dispatch = useDispatch();
-
-    const handleSortTool = (value) => {
-        dispatch(sortTool({ sortToolValue: value, label: label, index: index, indexTB: indexTB }));
-    };
     const handleDragStart = (event) => {
         event.dataTransfer.setData('indexStart', index);
     };
@@ -72,7 +51,7 @@ function SortToolItem({ icon, blur, id, index, label, onDragEnd }) {
                                 <div
                                     className={cx('render-item')}
                                     onClick={() => {
-                                        setToolSort(null);
+                                        updateStateSort(sortKey, null);
                                         setRenderToolSort(false);
                                     }}
                                 >
@@ -82,7 +61,7 @@ function SortToolItem({ icon, blur, id, index, label, onDragEnd }) {
                                 <div
                                     className={cx('render-item')}
                                     onClick={() => {
-                                        setToolSort(true);
+                                        updateStateSort(sortKey, true);
                                         setRenderToolSort(false);
                                     }}
                                 >
@@ -92,7 +71,7 @@ function SortToolItem({ icon, blur, id, index, label, onDragEnd }) {
                                 <div
                                     className={cx('render-item')}
                                     onClick={() => {
-                                        setToolSort(false);
+                                        updateStateSort(sortKey, false);
                                         setRenderToolSort(false);
                                     }}
                                 >
@@ -108,15 +87,15 @@ function SortToolItem({ icon, blur, id, index, label, onDragEnd }) {
                         >
                             <FontAwesomeIcon
                                 icon={
-                                    toolSort !== null
-                                        ? (toolSort === true && faArrowDownShortWide) ||
-                                          (toolSort === false && faArrowUpShortWide)
+                                    state !== null
+                                        ? (state === true && faArrowDownShortWide) ||
+                                          (state === false && faArrowUpShortWide)
                                         : faBars
                                 }
                             />
                             <div>
-                                {toolSort !== null
-                                    ? (toolSort === true && 'Ascending') || (toolSort === false && 'Descending')
+                                {state !== null
+                                    ? (state === true && 'Ascending') || (state === false && 'Descending')
                                     : 'Normal'}
                             </div>
                             <img src={images.arrowDownIcon} alt="" />

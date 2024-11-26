@@ -1,39 +1,54 @@
 import classNames from 'classnames/bind';
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faCircleUser } from '@fortawesome/free-regular-svg-icons';
 import { faListCheck } from '@fortawesome/free-solid-svg-icons';
-
 import styles from './TaskTool.module.scss';
-import { editHideTool } from '~/redux/actions';
+import axiosInstance from '~/axiosConfig';
+import { TaskBoardValue } from '~/App';
 
 const cx = classNames.bind(styles);
 
-function HideTool({ indexTB, toolItems, handleCheckHide }) {
-    const [checkboxes, setCheckboxes] = useState(
-        JSON.parse(localStorage.getItem(`toolHide${indexTB}`)) || [true, true, true],
-    );
-    const [checkedAll, setCheckedAll] = useState(checkboxes.includes(false) ? false : true);
+function HideTool({ indexTB, toolItems }) {
+    const taskBoardValue = useContext(TaskBoardValue)[0];
+    const handleUpdate = useContext(TaskBoardValue)[1];
 
+    const [taskBoard, setTaskBoard] = useState(taskBoardValue);
+    const init = taskBoardValue.date && taskBoardValue.status && taskBoardValue.person;
+    const [checkAll, setCheckAll] = useState(init);
     const iconsHide = [faCalendar, faCircleUser, faListCheck];
 
-    const dispatch = useDispatch();
-
     useEffect(() => {
-        handleEditHideTool(checkboxes);
-        handleCheckHide(checkboxes);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [checkboxes]);
+        getTaskBoard();
+    }, [checkAll]);
 
-    const handleEditHideTool = (checkboxes) => {
-        dispatch(
-            editHideTool({
-                index: indexTB,
-                hideToolValue: checkboxes,
-            }),
-        );
+    const handleHideToolAll = async (boolean) => {
+        await axiosInstance.patch(`/workspace/${indexTB}`, {
+            date: boolean,
+            person: boolean,
+            status: boolean,
+        });
+        setCheckAll(boolean);
+        getTaskBoard();
+        await handleUpdate();
     };
+
+    const handleEditHide = async (label, boolean) => {
+        await axiosInstance.patch(`/workspace/${indexTB}`, {
+            [label]: boolean,
+        });
+        boolean === false && setCheckAll(false);
+        const value = await getTaskBoard();
+        value.date && value.status && value.person && setCheckAll(true);
+        await handleUpdate();
+    };
+
+    const getTaskBoard = async () => {
+        const taskBoard = await axiosInstance.get(`/workspace/${indexTB}`);
+        setTaskBoard(taskBoard.data);
+        return taskBoard.data;
+    };
+
     return (
         <div className={cx('tool-hide')}>
             <div>Choose column to display</div>
@@ -41,15 +56,9 @@ function HideTool({ indexTB, toolItems, handleCheckHide }) {
                 All columns
                 <input
                     type="checkbox"
-                    checked={checkedAll}
+                    checked={checkAll}
                     onChange={() => {
-                        setCheckedAll(!checkedAll);
-                        setCheckboxes([!checkedAll, !checkedAll, !checkedAll]);
-                        localStorage.setItem(
-                            `toolHide${indexTB}`,
-                            JSON.stringify([!checkedAll, !checkedAll, !checkedAll]),
-                        );
-                        handleEditHideTool([!checkedAll, !checkedAll, !checkedAll]);
+                        handleHideToolAll(!checkAll);
                     }}
                 />
             </div>
@@ -61,17 +70,9 @@ function HideTool({ indexTB, toolItems, handleCheckHide }) {
                     </div>
                     <input
                         type="checkbox"
-                        checked={checkboxes[index]}
+                        checked={taskBoard?.[label.toLowerCase()]}
                         onChange={() => {
-                            const newCheckboxes = [...checkboxes];
-                            newCheckboxes[index] = !checkboxes[index];
-                            setCheckboxes(newCheckboxes);
-                            localStorage.setItem(`toolHide${indexTB}`, JSON.stringify(newCheckboxes));
-                            if (newCheckboxes[index] === false) {
-                                setCheckedAll(false);
-                            } else if (!newCheckboxes.includes(false)) {
-                                setCheckedAll(true);
-                            }
+                            handleEditHide(label.toLowerCase(), !taskBoard?.[label.toLowerCase()]);
                         }}
                     />
                 </div>

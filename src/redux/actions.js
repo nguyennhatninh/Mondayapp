@@ -19,76 +19,44 @@ export const requireOther = (data) => {
         payload: data,
     };
 };
-export const addTaskBoard = (data) => {
+
+export const searchTool = (data) => {
     return {
-        type: 'taskBoards/addTaskBoard',
+        type: 'tools/search',
         payload: data,
     };
 };
 
-export const deleteTaskBoard = (data) => {
+export const filterDate = (data) => {
     return {
-        type: 'taskBoards/deleteTaskBoard',
+        type: 'tools/filter/date',
         payload: data,
     };
 };
 
-export const editTaskBoard = (data) => {
+export const filterGroup = (data) => {
     return {
-        type: 'taskBoards/editTaskBoard',
+        type: 'tools/filter/group',
         payload: data,
     };
 };
 
-export const addTaskTable = (data) => {
+export const filterStatus = (data) => {
     return {
-        type: 'addTaskTable',
-        payload: data,
-    };
-};
-export const resetTaskTable = () => {
-    return {
-        type: 'resetTaskTable',
-    };
-};
-export const searchTaskTable = (data) => {
-    return {
-        type: 'searchTaskTable',
+        type: 'tools/filter/status',
         payload: data,
     };
 };
 
-export const groupFilter = (data) => {
+export const toolSorts = (data) => {
     return {
-        type: 'filterTool/groupFilter',
+        type: 'tools/sort',
         payload: data,
     };
 };
 
-export const statusFilter = (data) => {
+export const clearTool = () => {
     return {
-        type: 'filterTool/statusFilter',
-        payload: data,
-    };
-};
-
-export const dueDateFilter = (data) => {
-    return {
-        type: 'filterTool/dueDateFilter',
-        payload: data,
-    };
-};
-
-export const editHideTool = (data) => {
-    return {
-        type: 'hideTool/editHideTool',
-        payload: data,
-    };
-};
-
-export const sortTool = (data) => {
-    return {
-        type: 'sortTool',
-        payload: data,
+        type: 'tools/clear',
     };
 };

@@ -6,11 +6,11 @@ import TaskBoard from './pages/TaskBoard';
 import { createContext } from 'react';
 import axiosInstance from './axiosConfig';
 
-export const IndexContext = createContext();
+export const TaskBoardValue = createContext();
 
 function App() {
     const isLogin = !!localStorage.getItem('accessToken');
-    const [myTaskBoards, setTaskBoard] = useState(isLogin ? [] : [{ name: 'New Workspace' }]);
+    const [myTaskBoards, setTaskBoard] = useState([{ name: 'New Workspace' }]);
     const getAllTaskBoards = async () => {
         const taskBoards = await axiosInstance.get('/user/my_workspaces');
         setTaskBoard(taskBoards.data);
@@ -54,9 +54,9 @@ function App() {
                                 path={`/TaskBoard/${item._id}`}
                                 element={
                                     <DefaultLayout>
-                                        <IndexContext.Provider value={index}>
-                                            <TaskBoard indexTB={index} key={index} title={item.name} />
-                                        </IndexContext.Provider>
+                                        <TaskBoardValue.Provider value={[item, getAllTaskBoards]}>
+                                            <TaskBoard key={index} taskBoard={item} />
+                                        </TaskBoardValue.Provider>
                                     </DefaultLayout>
                                 }
                             />

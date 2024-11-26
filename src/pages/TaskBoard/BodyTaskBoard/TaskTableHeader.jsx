@@ -1,31 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import dayjs from 'dayjs';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import moment from 'moment/moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react/headless';
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons';
-
 import styles from './TaskTableHeader.module.scss';
-import { hideToolSelector } from '~/redux/selectors';
 import { requireLogin } from '~/redux/actions';
 
 const cx = classNames.bind(styles);
 
-function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTable, handleDeleteTable, hide }) {
+function TaskTableHeader({ children, handleEditTable, handleDeleteTable, hide, taskBoard, table }) {
     const isLogin = !!localStorage.getItem('accessToken');
-    const states = ['Done', 'Working on it', 'Stuck', 'Not Started'];
-    const tableItemData = JSON.parse(localStorage.getItem(`taskItems-${indexTB}-${index}`));
-    const status = tableItemData?.map((item) => item.status);
-    const valueDate = tableItemData?.map((item) => item.valueDate);
+    const states = ['done', 'working_on_it', 'stuck', 'not_started'];
+    const status = table.tasks?.map((item) => item.status);
+    const valueDate = table.tasks?.map((item) => item.date);
 
     const dispatch = useDispatch();
-    const hideTool = useSelector(hideToolSelector);
 
     const [show, setShow] = useState(true);
-    const [inputValue, setInputValue] = useState(title);
+    const [inputValue, setInputValue] = useState(table.name);
     const [render, setRender] = useState(false);
 
     const inputRef = useRef();
@@ -34,8 +30,8 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
     const farthestDate = sortedDates[sortedDates.length - 1];
 
     useEffect(() => {
-        setInputValue(title);
-    }, [title]);
+        setInputValue(table.name);
+    }, [table.name]);
 
     const handleSetInputValue = (e) => {
         setInputValue(e.target.value);
@@ -64,7 +60,7 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
                 className={cx('table-panel-item')}
                 onClick={() => {
                     if (isLogin) {
-                        handleDeleteTable(index);
+                        handleDeleteTable(table._id);
                         setRender(false);
                     } else {
                         dispatch(requireLogin(true));
@@ -81,8 +77,8 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
             className={cx(
                 'task-table',
                 !show && 'collapsed',
-                !show && index !== 0 && `color${index}`,
-                !show && index === 0 && 'color0',
+                !show && table._id !== 0 && `color0`,
+                !show && table._id === 0 && 'color0',
                 { hide },
             )}
         >
@@ -100,7 +96,7 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
                 </Tippy>
             </div>
             <div>
-                <div className={cx('table-title', `color${index}`)}>
+                <div className={cx('table-title', `color${table._id}`)}>
                     <FontAwesomeIcon
                         onClick={handleShow}
                         className={cx('table-title-icon', { show })}
@@ -111,27 +107,18 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
                         className={cx('table-title-input', { show })}
                         value={inputValue}
                         onChange={handleSetInputValue}
-                        onBlur={(e) => handleChangeValueTable(e.target.value, index)}
+                        onBlur={(e) => handleEditTable(e.target.value, table._id)}
                     />
                 </div>
                 {show && (
                     <div>
-                        <div className={cx('table-header', `color${index}`)}>
+                        <div className={cx('table-header', `color0`)}>
                             <div className={cx('table-header-task')}>Task</div>
                             <div className={cx('table-header-categories')}>
-                                {(indexTB === hideTool.index && hideTool.hideToolValue[0] === true) ||
-                                indexTB !== hideTool.index ? (
-                                    <div className={cx('table-header-category')}>Due date</div>
-                                ) : null}
-                                {(indexTB === hideTool.index && hideTool.hideToolValue[1] === true) ||
-                                indexTB !== hideTool.index ? (
-                                    <div className={cx('table-header-category')}>Person</div>
-                                ) : null}
-                                {(indexTB === hideTool.index && hideTool.hideToolValue[2] === true) ||
-                                indexTB !== hideTool.index ? (
-                                    <div className={cx('table-header-category')}>Status</div>
-                                ) : null}
-                                {!hideTool.hideToolValue.includes(true) && (
+                                {taskBoard.date ? <div className={cx('table-header-category')}>Due date</div> : null}
+                                {taskBoard.person ? <div className={cx('table-header-category')}>Person</div> : null}
+                                {taskBoard.status ? <div className={cx('table-header-category')}>Status</div> : null}
+                                {!taskBoard.date && !taskBoard.person && !taskBoard.status && (
                                     <div className={cx('table-header-category')}></div>
                                 )}
                             </div>
@@ -141,7 +128,7 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
                 )}
                 {!show && (
                     <div className={cx('task-table-count')}>
-                        {tableItemData ? `${tableItemData.length} Tasks` : 'No tasks'}
+                        {table.tasks ? `${table.tasks.length} Tasks` : 'No tasks'}
                     </div>
                 )}
             </div>
@@ -171,7 +158,7 @@ function TaskTableHeader({ title, index, children, indexTB, handleChangeValueTab
                                     ></div>
                                 ))
                             ) : (
-                                <div key={index} style={{ width: `100%`, opacity: 0.5 }} className={cx(`status3`)}>
+                                <div key={table._id} style={{ width: `100%`, opacity: 0.5 }} className={cx(`status3`)}>
                                     ---
                                 </div>
                             )}

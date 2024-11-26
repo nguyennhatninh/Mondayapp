@@ -86,8 +86,6 @@ function TaskBoardItem({ children, icon, space, hover, large, to, index, noLink 
             event.target.value === valueTaskBoardInput
         ) {
             event.preventDefault();
-        } else {
-            window.location.href = to;
         }
     };
 

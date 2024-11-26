@@ -12,7 +12,7 @@ import TaskTool from './TaskTool/TaskTool';
 
 const cx = classNames.bind(styles);
 
-function HeaderTaskBoard({ handleHeaderLite, title, indexTB }) {
+function HeaderTaskBoard({ handleHeaderLite, taskBoard, tables }) {
     const taskViews = ['Main Table', 'Chart', 'Table'];
     const [active, setActive] = useState(0);
     const [isVisible, setIsVisible] = useState(true);
@@ -47,7 +47,7 @@ function HeaderTaskBoard({ handleHeaderLite, title, indexTB }) {
                 <div className={cx('header-task-main')}>
                     <div className={cx('header-task-title')}>
                         <div className={cx('task-title-left')}>
-                            {title}
+                            {taskBoard.name}
                             <Tippy delay={[300, 0]} content="Show board description">
                                 <img src={images.moreInfoIcon} alt="" />
                             </Tippy>
@@ -144,7 +144,7 @@ function HeaderTaskBoard({ handleHeaderLite, title, indexTB }) {
                 </div>
             </div>
             <div className={cx('header-task-tool')}>
-                <TaskTool indexTB={indexTB} />
+                <TaskTool tables={tables} taskBoard={taskBoard} />
             </div>
         </div>
     );

@@ -34,7 +34,7 @@ function RegisterForm({ logIn, signup }) {
         },
     };
     const handleRegister = async (userInfo) => {
-        const res = await axiosInstance.post(`/user/register`, userInfo);
+        const res = await axiosInstance.post(`/user`, userInfo);
         typeof res.data.data === 'string' && setErrorMessageLogin(res.data.data);
         if (res.status === 200) {
             window.location.href = './login';

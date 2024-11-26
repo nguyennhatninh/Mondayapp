@@ -1,25 +1,27 @@
 import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react/headless';
-import { useState, useEffect, memo } from 'react';
-import { useDispatch } from 'react-redux';
-
+import { useState, useEffect, memo, useContext } from 'react';
 import styles from './TaskTool.module.scss';
 import Button from '~/components/Button/Button';
 import Search from '~/components/Search/Search';
 import TaskToolItem from './TaskToolItem';
 import images from '~/assets/images';
-import { addTaskTable, searchTaskTable } from '~/redux/actions';
 import SortTool from './SortTool';
 import HideTool from './HideTool';
 import FilterTool from './FilterTool';
 import PersonTool from './PersonTool';
+import { TablesInWorkspace } from '../..';
+import axiosInstance from '~/axiosConfig';
+import { useDispatch } from 'react-redux';
+import { searchTool } from '~/redux/actions';
 
 const cx = classNames.bind(styles);
 
-function TaskTool({ indexTB }) {
-    const [renderToolItem, setRenderToolItem] = useState({ person: false, filter: false, sort: false, hide: false });
-    const [valueHide, setvalueHide] = useState([true, true, true]);
+function TaskTool({ tables, taskBoard }) {
+    const dispatch = useDispatch();
 
+    const [renderToolItem, setRenderToolItem] = useState({ person: false, filter: false, sort: false, hide: false });
+    const tablesInWorkspace = useContext(TablesInWorkspace);
     const toolItems = {
         labels: ['Date', 'Person', 'Status'],
         icon: [
@@ -29,18 +31,15 @@ function TaskTool({ indexTB }) {
         ],
     };
 
-    const dispatch = useDispatch();
+    const countHideColumns = toolItems.labels.filter((el) => taskBoard[el.toLowerCase()] === false).length;
 
-    const handleCheckHide = (valueHide) => {
-        setvalueHide(valueHide);
+    const handleAddTaskTable = async (value) => {
+        await axiosInstance.post(`/task`, { name: value, table: taskBoard.tables[0]._id });
+        tablesInWorkspace[0]();
     };
 
-    const handleAddTaskTable = (value) => {
-        dispatch(addTaskTable({ value: value, index: indexTB }));
-    };
-
-    const handleSetInputValue = (value) => {
-        dispatch(searchTaskTable({ value: value, index: indexTB }));
+    const handleSetInputValue = async (value) => {
+        dispatch(searchTool(value));
     };
 
     useEffect(() => {
@@ -52,7 +51,7 @@ function TaskTool({ indexTB }) {
 
     const hideTool = () => (
         <div>
-            <HideTool toolItems={toolItems} indexTB={indexTB} handleCheckHide={handleCheckHide} />
+            <HideTool toolItems={toolItems} indexTB={taskBoard._id} />
         </div>
     );
 
@@ -64,13 +63,13 @@ function TaskTool({ indexTB }) {
 
     const filterTool = () => (
         <div>
-            <FilterTool indexTB={indexTB} />
+            <FilterTool tables={tables} indexTB={taskBoard._id} />
         </div>
     );
 
     const personTool = () => (
         <div>
-            <PersonTool indexTB={indexTB} />
+            <PersonTool />
         </div>
     );
 
@@ -84,8 +83,6 @@ function TaskTool({ indexTB }) {
                 lite
                 iconLeft={images.searchIcon}
                 placeholder="Search"
-                iconCustom={images.searchOptions}
-                contentIcon={'Search options'}
                 handleSetInputValue={handleSetInputValue}
             />
             <div>
@@ -145,9 +142,7 @@ function TaskTool({ indexTB }) {
                 >
                     <div onClick={() => setRenderToolItem({ hide: true })}>
                         <TaskToolItem leftIcon={images.hideIcon} active={renderToolItem.hide}>
-                            {valueHide.includes(false)
-                                ? `Hide / ${valueHide.filter((el) => el === false).length}`
-                                : 'Hide'}
+                            {countHideColumns > 0 ? `Hide / ${countHideColumns}` : 'Hide'}
                         </TaskToolItem>
                     </div>
                 </Tippy>

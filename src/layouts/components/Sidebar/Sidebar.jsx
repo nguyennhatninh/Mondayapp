@@ -39,8 +39,8 @@ function Sidebar(show) {
     const handleAddTaskBoard = async () => {
         if (isLogin) {
             await axiosInstance.post('/workspace');
-            const data = await getAllTaskBoards();
-            setTaskBoards([...data]);
+            await getAllTaskBoards();
+            window.location.reload();
         } else {
             dispatch(requireLogin(true));
         }

@@ -11,7 +11,7 @@
     color: #333;
     border: 1px solid var(--color-border);
     border-top: none;
-    border-left: 6px solid #00c875;
+    border-left: 6px solid var(--primary-light);
     .task-table-name {
         width: 45%;
         display: flex;
@@ -176,10 +176,10 @@
         background-color: $color-value;
     }
 }
-@include status-color('color3', #c4c4c4);
-@include status-color('color0', #00c875);
-@include status-color('color1', #fdab3d);
-@include status-color('color2', #e44258);
+@include status-color('color_not_started', #c4c4c4);
+@include status-color('color_done', #00c875);
+@include status-color('color_working_on_it', #fdab3d);
+@include status-color('color_stuck', #e44258);
 
 .table-item-close {
     font-size: 1.3rem;

@@ -6,8 +6,6 @@ import Logo from '~/components/Logo/Logo';
 import Tippy from '@tippyjs/react/headless';
 import { useEffect, useState } from 'react';
 import Menu from './Menu';
-import { loginSelector } from '~/redux/selectors';
-import { useSelector } from 'react-redux';
 import Navbar, { NavbarItem } from '../Sidebar/Navbar';
 import config from '~/config';
 import axiosInstance from '~/axiosConfig';
@@ -15,14 +13,15 @@ import axiosInstance from '~/axiosConfig';
 const cx = classNames.bind(styles);
 
 function Header() {
-    const isLogin = useSelector(loginSelector);
+    const isLogin = !!localStorage.getItem('accessToken');
     const [renderMenu, setRenderMenu] = useState(false);
     const [renderSidebar, setRenderSidebar] = useState(false);
-    const [userInfo, setUserInfo] = useState('');
+    const [userInfo, setUserInfo] = useState();
 
     const handelGetInfoUser = async () => {
         try {
             const response = await axiosInstance.get('user/me');
+            setUserInfo(response.data);
             return response.data;
         } catch (e) {
             if (e.response.status === 401) {
@@ -34,11 +33,7 @@ function Header() {
     };
     useEffect(() => {
         if (isLogin) {
-            async function fetchData() {
-                const info = await handelGetInfoUser();
-                setUserInfo(info);
-            }
-            fetchData();
+            handelGetInfoUser();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -106,15 +101,7 @@ function Header() {
                                         src="https://cdn.monday.com/images/logos/monday_logo_icon.png"
                                         alt=""
                                     ></img>
-                                    <img
-                                        className={cx('avatar')}
-                                        src={
-                                            userInfo?.avatar
-                                                ? userInfo.avatar
-                                                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRknnc4OqRgNtBh8jwv-wY4dpK-YZ8AHDMktRa85N4YD2wp-zhQvYavkyKPtCZtC48DLrw&usqp=CAU'
-                                        }
-                                        alt=""
-                                    />
+                                    <img className={cx('avatar')} src={userInfo?.avatar} alt="" />
                                 </div>
                             </Tippy>
                         </div>
