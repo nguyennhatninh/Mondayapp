@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearTool, requireLogin } from '~/redux/actions';
 import axiosInstance from '~/axiosConfig';
 import { toolsSelector } from '~/redux/selectors';
+import { PuffLoader } from 'react-spinners';
 
 const cx = classNames.bind(styles);
 
@@ -27,6 +28,7 @@ function TaskBoard({ taskBoard }) {
 
     const [lite, setLite] = useState(false);
     const [tables, setTables] = useState([' Table Title', ' Table Title']);
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -71,17 +73,33 @@ function TaskBoard({ taskBoard }) {
     };
 
     const getAllTables = async () => {
-        const tables = await axiosInstance.get(
-            `/workspace/${indexTB}/tables?query=${tools.search ?? ''}&&tableId=${tools.filter.group ?? ''}&&dueDate=${
-                tools.filter.date ?? ''
-            }&&status=${tools.filter.status ?? ''}&&sortBy=${tools.sortBy ?? ''}&sortOrder=${tools.sortOrder ?? ''}`,
-        );
-        setTables(tables.data);
-        return tables.data;
+        setLoading(true);
+        try {
+            const tables = await axiosInstance.get(
+                `/workspace/${indexTB}/tables?query=${tools.search ?? ''}&&tableId=${
+                    tools.filter.group ?? ''
+                }&&dueDate=${tools.filter.date ?? ''}&&status=${tools.filter.status ?? ''}&&sortBy=${
+                    tools.sortBy ?? ''
+                }&sortOrder=${tools.sortOrder ?? ''}`,
+            );
+            setTables(tables.data);
+            return tables.data;
+        } catch (error) {
+            console.log(error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className={cx('task-board-wrapper')}>
+            {loading && (
+                <div>
+                    <div className={cx('overlay', { loading })}>
+                        <PuffLoader color="#fafafa" size={80} />
+                    </div>
+                </div>
+            )}
             <TablesInWorkspace.Provider value={[getAllTables, setTables]}>
                 <div className={cx('task-board-inner')}>
                     <div className={cx('task-board', { lite })}>

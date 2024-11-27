@@ -11,15 +11,24 @@ import Logo from '~/components/Logo/Logo';
 import WorkChoiceIcon from '~/layouts/components/Sidebar/WorkChoiceIcon';
 import axiosInstance from '~/axiosConfig';
 import { useEffect, useState } from 'react';
+import { PuffLoader } from 'react-spinners';
 
 const cx = classNames.bind(styles);
 
 function Home() {
     const isLogin = !!localStorage.getItem('accessToken');
     const [myTaskBoards, setTaskBoard] = useState([{ name: 'New Workspace' }]);
+    const [loading, setLoading] = useState(false);
     const getAllTaskBoards = async () => {
-        const taskBoards = await axiosInstance.get('/user/my_workspaces');
-        setTaskBoard(taskBoards.data);
+        setLoading(true);
+        try {
+            const taskBoards = await axiosInstance.get('/user/my_workspaces');
+            setTaskBoard(taskBoards.data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
     };
     useEffect(() => {
         if (isLogin) {
@@ -33,6 +42,13 @@ function Home() {
     const name = decoded?.username;
     return (
         <div className={cx('wrapper')}>
+            {loading && (
+                <div>
+                    <div className={cx('overlay', { loading })}>
+                        <PuffLoader color="#fafafa" size={80} />
+                    </div>
+                </div>
+            )}
             <HeaderHome></HeaderHome>
             <div className={cx('home-body')}>
                 <div className={cx('main-container')}>

@@ -8,6 +8,7 @@ import MyWorkItem from './MyWorkItem';
 import TaskTableBody from '../TaskBoard/BodyTaskBoard/TaskTableBody';
 import { useEffect, useState } from 'react';
 import axiosInstance from '~/axiosConfig';
+import { PuffLoader } from 'react-spinners';
 
 const cx = classNames.bind(styles);
 
@@ -20,9 +21,11 @@ function MyWorkPage() {
     const [taskThisWeek, setTaskThisWeek] = useState([]);
     const [dataNextWeek, setDataNextWeek] = useState();
     const [taskNextWeek, setTaskNextWeek] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
+            setLoading(true);
             try {
                 await getDataPastDate();
                 await getDataToday();
@@ -30,6 +33,8 @@ function MyWorkPage() {
                 await getDataNextWeek();
             } catch (error) {
                 console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
             }
         }
         fetchData();
@@ -108,6 +113,13 @@ function MyWorkPage() {
 
     return (
         <div className={cx('my-work')}>
+            {loading && (
+                <div>
+                    <div className={cx('overlay', { loading })}>
+                        <PuffLoader color="#fafafa" size={80} />
+                    </div>
+                </div>
+            )}
             <div className={cx('my-work-title')}>
                 My work
                 <div></div>
