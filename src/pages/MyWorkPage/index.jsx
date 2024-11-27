@@ -27,10 +27,7 @@ function MyWorkPage() {
         async function fetchData() {
             setLoading(true);
             try {
-                await getDataPastDate();
-                await getDataToday();
-                await getDataThisWeek();
-                await getDataNextWeek();
+                await Promise.all([getDataPastDate(), getDataToday(), getDataThisWeek(), getDataNextWeek()]);
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
