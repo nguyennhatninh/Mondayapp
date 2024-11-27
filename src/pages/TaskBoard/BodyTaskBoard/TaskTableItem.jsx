@@ -7,7 +7,6 @@ import { faClose } from '@fortawesome/free-solid-svg-icons';
 import styles from './TaskTableItem.module.scss';
 import MyDatePicker from '~/components/DatePicker/MyDatePicker';
 import dayjs from 'dayjs';
-import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { TaskBoardValue } from '~/App';
 import axiosInstance from '~/axiosConfig';
 import { TableValue } from '..';
@@ -19,9 +18,8 @@ function TaskTableItem({ index, lite, task, tableTitle, main, taskBoardsTitle })
     const tableValue = useContext(TableValue);
     const taskBoard = taskBoardValue?.[0];
     const handleUpdate = tableValue?.[1];
-    const valueDate = dayjs(task.date);
 
-    dayjs.extend(weekOfYear);
+    const valueDate = dayjs(task.date);
 
     const statesArr = [
         { done: 'Done' },
@@ -87,8 +85,9 @@ function TaskTableItem({ index, lite, task, tableTitle, main, taskBoardsTitle })
                         <div className={cx('table-info-item', 'date', main && 'Date')}>
                             <MyDatePicker
                                 value={valueDate}
-                                onChange={async (newValue) => {
-                                    handleEditTask(index, { date: newValue });
+                                onChange={(newValue) => {
+                                    const valueDate = new Date(newValue);
+                                    handleEditTask(index, { date: valueDate });
                                 }}
                             />
                         </div>
