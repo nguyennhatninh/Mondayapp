@@ -14,6 +14,7 @@ import { TableValue } from '..';
 const cx = classNames.bind(styles);
 
 function TaskTableItem({ index, lite, task, tableTitle, main, taskBoardsTitle }) {
+    const isLogin = !!localStorage.getItem('accessToken');
     const taskBoardValue = useContext(TaskBoardValue);
     const tableValue = useContext(TableValue);
     const taskBoard = taskBoardValue?.[0];
@@ -81,7 +82,7 @@ function TaskTableItem({ index, lite, task, tableTitle, main, taskBoardsTitle })
                 {lite && <div className={cx('task-table-parent', main && 'Board')}>{taskBoardsTitle}</div>}
                 {lite && <div className={cx('task-table-parent', main && 'Table')}>{tableTitle}</div>}
                 <div className={cx('task-table-info')}>
-                    {taskBoard?.date | lite ? (
+                    {taskBoard?.date | lite | !isLogin ? (
                         <div className={cx('table-info-item', 'date', main && 'Date')}>
                             <MyDatePicker
                                 value={valueDate}
@@ -92,7 +93,7 @@ function TaskTableItem({ index, lite, task, tableTitle, main, taskBoardsTitle })
                             />
                         </div>
                     ) : null}
-                    {taskBoard?.person | lite ? (
+                    {taskBoard?.person | lite | !isLogin ? (
                         <div className={cx('table-info-item', main && 'Person')}>
                             <img
                                 src="https://files.monday.com/use1/photos/43954248/thumb_small/43954248-user_photo_initials_2023_05_31_15_01_39.png?1685545299"
@@ -100,7 +101,7 @@ function TaskTableItem({ index, lite, task, tableTitle, main, taskBoardsTitle })
                             />
                         </div>
                     ) : null}
-                    {taskBoard?.status | lite ? (
+                    {taskBoard?.status | lite | !isLogin ? (
                         <Tippy
                             interactive
                             render={renderStatus}
@@ -116,7 +117,7 @@ function TaskTableItem({ index, lite, task, tableTitle, main, taskBoardsTitle })
                             </div>
                         </Tippy>
                     ) : null}
-                    {!taskBoard?.status && !taskBoard?.person && !taskBoard?.date && !lite && (
+                    {!taskBoard?.status && !taskBoard?.person && !taskBoard?.date && !lite && isLogin && (
                         <div className={cx('table-info-item')}></div>
                     )}
                 </div>

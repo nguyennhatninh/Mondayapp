@@ -115,10 +115,16 @@ function TaskTableHeader({ children, handleEditTable, handleDeleteTable, hide, t
                         <div className={cx('table-header', `color0`)}>
                             <div className={cx('table-header-task')}>Task</div>
                             <div className={cx('table-header-categories')}>
-                                {taskBoard.date ? <div className={cx('table-header-category')}>Due date</div> : null}
-                                {taskBoard.person ? <div className={cx('table-header-category')}>Person</div> : null}
-                                {taskBoard.status ? <div className={cx('table-header-category')}>Status</div> : null}
-                                {!taskBoard.date && !taskBoard.person && !taskBoard.status && (
+                                {taskBoard.date || !isLogin ? (
+                                    <div className={cx('table-header-category')}>Due date</div>
+                                ) : null}
+                                {taskBoard.person || !isLogin ? (
+                                    <div className={cx('table-header-category')}>Person</div>
+                                ) : null}
+                                {taskBoard.status || !isLogin ? (
+                                    <div className={cx('table-header-category')}>Status</div>
+                                ) : null}
+                                {!taskBoard.date && !taskBoard.person && !taskBoard.status && isLogin && (
                                     <div className={cx('table-header-category')}></div>
                                 )}
                             </div>

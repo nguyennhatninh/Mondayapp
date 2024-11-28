@@ -1,14 +1,17 @@
 import classNames from 'classnames/bind';
 
 import styles from './TaskTool.module.scss';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { filterDate, filterGroup, filterStatus } from '~/redux/actions';
+import { filterDate, filterGroup, filterStatus, requireLogin } from '~/redux/actions';
 
 const cx = classNames.bind(styles);
 
 function FilterTool({ tables }) {
     const dispatch = useDispatch();
+    const isLogin = !!localStorage.getItem('accessToken');
+    const initGroup = [{ name: 'Table Title 1' }, { name: 'Table Title 2' }];
+    let groups = isLogin ? tables : initGroup;
     const dueDateItems = ['Overdue', 'Today', 'Tomorrow', 'This Week', 'Next Week', 'This Month'];
     const dueDateQuery = ['overdue', 'today', 'tomorrow', 'this_week', 'next_week', 'this_month'];
     const status = ['Done', 'Working on it', 'Stuck', 'Not Started'];
@@ -17,8 +20,6 @@ function FilterTool({ tables }) {
     const [tableSelected, setTableSelected] = useState();
     const [dateSelected, setDateSelected] = useState();
     const [statusSelected, setStatusSelected] = useState();
-
-    useEffect(() => {}, []);
 
     const handleGroupFilter = async (index, table) => {
         if (tableSelected === undefined || tableSelected !== index) {
@@ -54,11 +55,17 @@ function FilterTool({ tables }) {
             <div>
                 <div className={cx('tool-filter-title')}>Group</div>
                 <div>
-                    {tables?.map((item, index) => (
+                    {groups?.map((item, index) => (
                         <div
                             key={index}
                             className={cx('tool-filter-item', tableSelected === index && 'active')}
-                            onClick={() => handleGroupFilter(index, item)}
+                            onClick={() => {
+                                if (isLogin) {
+                                    handleGroupFilter(index, item);
+                                } else {
+                                    dispatch(requireLogin(true));
+                                }
+                            }}
                         >
                             {item.name}
                         </div>
@@ -72,7 +79,13 @@ function FilterTool({ tables }) {
                         <div
                             key={index}
                             className={cx('tool-filter-item', dateSelected === index && 'active')}
-                            onClick={() => handleDueDateFilter(index)}
+                            onClick={() => {
+                                if (isLogin) {
+                                    handleDueDateFilter(index, item);
+                                } else {
+                                    dispatch(requireLogin(true));
+                                }
+                            }}
                         >
                             {item}
                         </div>
@@ -86,7 +99,13 @@ function FilterTool({ tables }) {
                         <div
                             key={index}
                             className={cx('tool-filter-item', statusSelected === index && 'active')}
-                            onClick={() => handleStatusFilter(index)}
+                            onClick={() => {
+                                if (isLogin) {
+                                    handleStatusFilter(index, item);
+                                } else {
+                                    dispatch(requireLogin(true));
+                                }
+                            }}
                         >
                             <div className={cx(`color${index}`)}></div>
                             {item}

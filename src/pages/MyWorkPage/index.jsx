@@ -106,7 +106,13 @@ function MyWorkPage() {
     const renderTaskItems = useCallback(
         (title, taskKey) => {
             return (
-                <MyWorkItemMemo icon={images.arrowRightIcon} title={title} items={state[taskKey].length} key={taskKey}>
+                <MyWorkItemMemo
+                    icon={images.arrowRightIcon}
+                    title={title}
+                    items={state[taskKey].length}
+                    key={taskKey}
+                    taskKey={taskKey}
+                >
                     {state.dataMyWork[taskKey].map((data, i) => (
                         <div key={data._id} className={cx('my-work-items', i === 0 && 'first')}>
                             <TaskTableBodyMemo

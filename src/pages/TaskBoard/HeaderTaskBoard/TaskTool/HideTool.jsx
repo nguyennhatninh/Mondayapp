@@ -6,20 +6,27 @@ import { faListCheck } from '@fortawesome/free-solid-svg-icons';
 import styles from './TaskTool.module.scss';
 import axiosInstance from '~/axiosConfig';
 import { TaskBoardValue } from '~/App';
+import { requireLogin } from '~/redux/actions';
+import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function HideTool({ indexTB, toolItems }) {
+    const isLogin = !!localStorage.getItem('accessToken');
     const taskBoardValue = useContext(TaskBoardValue)[0];
     const handleUpdate = useContext(TaskBoardValue)[1];
 
+    const dispatch = useDispatch();
+
     const [taskBoard, setTaskBoard] = useState(taskBoardValue);
-    const init = taskBoardValue.date && taskBoardValue.status && taskBoardValue.person;
+    const init = isLogin ? taskBoardValue.date && taskBoardValue.status && taskBoardValue.person : true;
     const [checkAll, setCheckAll] = useState(init);
     const iconsHide = [faCalendar, faCircleUser, faListCheck];
 
     useEffect(() => {
-        getTaskBoard();
+        if (isLogin) {
+            getTaskBoard();
+        }
     }, [checkAll]);
 
     const handleHideToolAll = async (boolean) => {
@@ -70,9 +77,13 @@ function HideTool({ indexTB, toolItems }) {
                     </div>
                     <input
                         type="checkbox"
-                        checked={taskBoard?.[label.toLowerCase()]}
+                        checked={isLogin ? taskBoard?.[label.toLowerCase()] : true}
                         onChange={() => {
-                            handleEditHide(label.toLowerCase(), !taskBoard?.[label.toLowerCase()]);
+                            if (isLogin) {
+                                handleEditHide(label.toLowerCase(), !taskBoard?.[label.toLowerCase()]);
+                            } else {
+                                dispatch(requireLogin(true));
+                            }
                         }}
                     />
                 </div>

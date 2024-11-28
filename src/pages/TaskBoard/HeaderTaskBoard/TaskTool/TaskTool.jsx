@@ -13,12 +13,14 @@ import PersonTool from './PersonTool';
 import { TablesInWorkspace } from '../..';
 import axiosInstance from '~/axiosConfig';
 import { useDispatch } from 'react-redux';
-import { searchTool } from '~/redux/actions';
+import { requireLogin, searchTool } from '~/redux/actions';
 
 const cx = classNames.bind(styles);
 
 function TaskTool({ tables, taskBoard }) {
     const dispatch = useDispatch();
+
+    const isLogin = !!localStorage.getItem('accessToken');
 
     const [renderToolItem, setRenderToolItem] = useState({ person: false, filter: false, sort: false, hide: false });
     const tablesInWorkspace = useContext(TablesInWorkspace);
@@ -75,7 +77,17 @@ function TaskTool({ tables, taskBoard }) {
 
     return (
         <div className={cx('task-tool')}>
-            <Button small primary onClick={() => handleAddTaskTable('New Task')}>
+            <Button
+                small
+                primary
+                onClick={() => {
+                    if (isLogin) {
+                        handleAddTaskTable('New Task');
+                    } else {
+                        dispatch(requireLogin(true));
+                    }
+                }}
+            >
                 New Task
             </Button>
             <Search

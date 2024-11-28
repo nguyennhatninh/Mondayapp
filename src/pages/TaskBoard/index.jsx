@@ -27,7 +27,28 @@ function TaskBoard({ taskBoard }) {
     const tools = useSelector(toolsSelector);
 
     const [lite, setLite] = useState(false);
-    const [tables, setTables] = useState([' Table Title', ' Table Title']);
+    const [tables, setTables] = useState([
+        {
+            name: 'Table Title 1',
+            tasks: [
+                {
+                    name: 'New Task',
+                    date: new Date(),
+                    status: 'not_started',
+                },
+            ],
+        },
+        {
+            name: 'Table Title 2',
+            tasks: [
+                {
+                    name: 'New Task',
+                    date: new Date(),
+                    status: 'not_started',
+                },
+            ],
+        },
+    ]);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
@@ -38,7 +59,9 @@ function TaskBoard({ taskBoard }) {
     }, []);
 
     useEffect(() => {
-        getAllTables();
+        if (isLogin) {
+            getAllTables();
+        }
     }, [tools]);
 
     const handleHeaderLite = (value) => {

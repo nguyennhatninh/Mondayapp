@@ -49,16 +49,18 @@ function Sidebar(show) {
     const handleSetInputValue = async (value) => {
         const resultValue = myTaskBoards.filter((taskBoard) => taskBoard.name.includes(value));
         setTaskBoards(resultValue);
-        if (value === '') {
+        if (value === '' && isLogin) {
             const data = await getAllTaskBoards();
             setTaskBoards([...data]);
         }
     };
 
     const getAllTaskBoards = async () => {
-        const taskBoards = await axiosInstance.get('/user/my_workspaces');
-        setTaskBoards(taskBoards.data);
-        return taskBoards.data;
+        if (isLogin) {
+            const taskBoards = await axiosInstance.get('/user/my_workspaces');
+            setTaskBoards(taskBoards.data);
+            return taskBoards.data;
+        }
     };
 
     return (

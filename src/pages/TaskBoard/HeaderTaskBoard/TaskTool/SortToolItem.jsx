@@ -5,10 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDownShortWide, faArrowUpShortWide, faBars } from '@fortawesome/free-solid-svg-icons';
 import styles from './TaskTool.module.scss';
 import images from '~/assets/images';
+import { requireLogin } from '~/redux/actions';
+import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function SortToolItem({ icon, blur, id, index, label, onDragEnd, updateStateSort, state, sortKey }) {
+    const isLogin = !!localStorage.getItem('accessToken');
+
+    const dispatch = useDispatch();
+
     const [renderToolSort, setRenderToolSort] = useState(false);
     useEffect(() => {
         if (blur) {
@@ -51,8 +57,12 @@ function SortToolItem({ icon, blur, id, index, label, onDragEnd, updateStateSort
                                 <div
                                     className={cx('render-item')}
                                     onClick={() => {
-                                        updateStateSort(sortKey, null);
-                                        setRenderToolSort(false);
+                                        if (isLogin) {
+                                            updateStateSort(sortKey, null);
+                                            setRenderToolSort(false);
+                                        } else {
+                                            dispatch(requireLogin(true));
+                                        }
                                     }}
                                 >
                                     <FontAwesomeIcon icon={faBars} />
@@ -61,8 +71,12 @@ function SortToolItem({ icon, blur, id, index, label, onDragEnd, updateStateSort
                                 <div
                                     className={cx('render-item')}
                                     onClick={() => {
-                                        updateStateSort(sortKey, true);
-                                        setRenderToolSort(false);
+                                        if (isLogin) {
+                                            updateStateSort(sortKey, null);
+                                            setRenderToolSort(false);
+                                        } else {
+                                            dispatch(requireLogin(true));
+                                        }
                                     }}
                                 >
                                     <FontAwesomeIcon icon={faArrowDownShortWide} />
@@ -71,8 +85,12 @@ function SortToolItem({ icon, blur, id, index, label, onDragEnd, updateStateSort
                                 <div
                                     className={cx('render-item')}
                                     onClick={() => {
-                                        updateStateSort(sortKey, false);
-                                        setRenderToolSort(false);
+                                        if (isLogin) {
+                                            updateStateSort(sortKey, null);
+                                            setRenderToolSort(false);
+                                        } else {
+                                            dispatch(requireLogin(true));
+                                        }
                                     }}
                                 >
                                     <FontAwesomeIcon icon={faArrowUpShortWide} />
