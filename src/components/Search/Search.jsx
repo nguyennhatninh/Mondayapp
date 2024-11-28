@@ -1,16 +1,25 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames/bind';
 
 import styles from './Search.module.scss';
 import Tippy from '@tippyjs/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import useDebounce from '~/hooks/useDebounce';
 
 const cx = classNames.bind(styles);
 
 function Search({ iconLeft, iconRight, iconCustom, placeholder, contentIcon, lite, handleSetInputValue, hover }) {
     const [searchLite, setSearchLite] = useState(!!lite);
+    const [inputValue, setInputValue] = useState('');
     const inputRef = useRef(null);
+
+    const debouncedValue = useDebounce(inputValue, 500);
+
+    useEffect(() => {
+        handleSetInputValue(debouncedValue);
+    }, [debouncedValue]);
 
     return (
         <div
@@ -25,8 +34,9 @@ function Search({ iconLeft, iconRight, iconCustom, placeholder, contentIcon, lit
             <input
                 ref={inputRef}
                 className={cx('search-input')}
+                value={inputValue}
                 placeholder={placeholder}
-                onChange={(e) => handleSetInputValue(e.target.value.trim())}
+                onChange={(e) => setInputValue(e.target.value.trim())}
             ></input>
             <Tippy content="Clear Search">
                 <div>

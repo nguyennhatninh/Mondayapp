@@ -22,7 +22,6 @@ function TaskTableBody({ index, lite, tasks, tableTitle, main, taskBoardsTitle }
     const [newTaskItem, setNewTaskItem] = useState('');
     const dispatch = useDispatch();
 
-    // handle TaskItem
     const handleInputChange = (e) => {
         setNewTaskItem(e.target.value);
     };

@@ -86,7 +86,7 @@ function TaskTableItem({ index, lite, task, tableTitle, main, taskBoardsTitle })
                             <MyDatePicker
                                 value={valueDate}
                                 onChange={(newValue) => {
-                                    const valueDate = new Date(newValue);
+                                    const valueDate = `${newValue.$y}-${newValue.$M + 1}-${newValue.$D}`;
                                     handleEditTask(index, { date: valueDate });
                                 }}
                             />
