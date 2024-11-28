@@ -97,7 +97,7 @@ function MyWorkPage() {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+    }, []);
 
     const handleSetInputValue = useCallback((value) => {
         console.log(value);
@@ -135,7 +135,7 @@ function MyWorkPage() {
     return (
         <div className={cx('my-work')}>
             {loading && (
-                <div className={cx('overlay')}>
+                <div className={cx('overlay', { loading })}>
                     <PuffLoader color="#fafafa" size={80} />
                 </div>
             )}
