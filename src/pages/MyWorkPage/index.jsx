@@ -6,115 +6,131 @@ import images from '~/assets/images';
 import Search from '~/components/Search/Search';
 import MyWorkItem from './MyWorkItem';
 import TaskTableBody from '../TaskBoard/BodyTaskBoard/TaskTableBody';
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import axiosInstance from '~/axiosConfig';
 import { PuffLoader } from 'react-spinners';
 
 const cx = classNames.bind(styles);
 
+const MyWorkItemMemo = React.memo(MyWorkItem);
+const TaskTableBodyMemo = React.memo(TaskTableBody);
+
+const taskReducer = (state, action) => {
+    switch (action.type) {
+        case 'SET_TASKS':
+            return {
+                ...state,
+                [action.payload.key]: action.payload.data,
+            };
+        case 'SET_DATA_MY_WORK':
+            return { ...state, dataMyWork: action.payload };
+        default:
+            return state;
+    }
+};
+
 function MyWorkPage() {
-    const [dataPastDate, setDataPastDate] = useState();
-    const [taskPastDate, setTaskPastDate] = useState([]);
-    const [dataToday, setDataToday] = useState();
-    const [taskToday, setTaskToday] = useState([]);
-    const [dataThisWeek, setDataThisWeek] = useState();
-    const [taskThisWeek, setTaskThisWeek] = useState([]);
-    const [dataNextWeek, setDataNextWeek] = useState();
-    const [taskNextWeek, setTaskNextWeek] = useState([]);
+    const [state, dispatch] = useReducer(taskReducer, {
+        past_date: [],
+        today: [],
+        this_week: [],
+        next_week: [],
+        dataMyWork: {
+            past_date: [],
+            today: [],
+            this_week: [],
+            next_week: [],
+        },
+    });
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        async function fetchData() {
-            setLoading(true);
-            try {
-                await Promise.all([getDataPastDate(), getDataToday(), getDataThisWeek(), getDataNextWeek()]);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchData();
+    const getMyTaskBoard = useCallback(async () => {
+        const response = await axiosInstance.get('/user/my_workspaces');
+        return response.data;
     }, []);
 
-    const getMyTaskBoard = async () => {
-        const taskBoards = await axiosInstance.get('/user/my_workspaces');
-        return taskBoards.data;
-    };
+    const getData = useCallback(
+        async (dueDate) => {
+            const myTaskBoards = await getMyTaskBoard();
+            const data = await Promise.all(
+                myTaskBoards.map(async (item) => {
+                    const response = await axiosInstance.get(`/workspace/${item._id}/tables?&&dueDate=${dueDate}`);
+                    return response.data.map((table) => ({
+                        ...table,
+                        workspace: item.name,
+                    }));
+                }),
+            );
 
-    const getDataPastDate = async () => {
-        const myTaskBoards = await getMyTaskBoard();
+            const tables = data.flat();
+            dispatch({
+                type: 'SET_TASKS',
+                payload: {
+                    key: dueDate,
+                    data: tables.map((item) => item.tasks).flat(),
+                },
+            });
 
-        const data = await Promise.all(
-            myTaskBoards?.map(async (item) => {
-                const tables = await axiosInstance.get(`/workspace/${item._id}/tables?&&dueDate=past_date`);
-                tables.data.map((table) => (table.workspace = item.name));
-                return [...tables.data];
-            }),
-        );
+            return tables;
+        },
+        [getMyTaskBoard],
+    );
 
-        const tables = data.map((item) => item).flat();
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const keys = ['past_date', 'today', 'this_week', 'next_week'];
+            const allData = await Promise.all(keys.map((key) => getData(key)));
 
-        setDataPastDate(tables);
-        setTaskPastDate(tables.map((item) => item.tasks).flat());
-        return tables;
-    };
+            const formattedData = keys.reduce((acc, key, idx) => {
+                acc[key] = allData[idx];
+                return acc;
+            }, {});
 
-    const getDataToday = async () => {
-        const myTaskBoards = await getMyTaskBoard();
-        const data = await Promise.all(
-            myTaskBoards?.map(async (item) => {
-                const tables = await axiosInstance.get(`/workspace/${item._id}/tables?&&dueDate=today`);
-                tables.data.map((table) => (table.workspace = item.name));
-                return [...tables.data];
-            }),
-        );
-        const tables = data.map((item) => item).flat();
+            dispatch({ type: 'SET_DATA_MY_WORK', payload: formattedData });
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
+    }, [getData]);
 
-        setDataToday(tables);
-        setTaskToday(tables.map((item) => item.tasks).flat());
-        return tables;
-    };
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
-    const getDataThisWeek = async () => {
-        const myTaskBoards = await getMyTaskBoard();
-        const data = await Promise.all(
-            myTaskBoards?.map(async (item) => {
-                const tables = await axiosInstance.get(`/workspace/${item._id}/tables?&&dueDate=this_week`);
-                tables.data.map((table) => (table.workspace = item.name));
-                return [...tables.data];
-            }),
-        );
-        const tables = data.map((item) => item).flat();
+    const handleSetInputValue = useCallback((value) => {
+        console.log(value);
+    }, []);
 
-        setDataThisWeek(tables);
-        setTaskThisWeek(tables.map((item) => item.tasks).flat());
-        return tables;
-    };
-
-    const getDataNextWeek = async () => {
-        const myTaskBoards = await getMyTaskBoard();
-        const data = await Promise.all(
-            myTaskBoards?.map(async (item) => {
-                const tables = await axiosInstance.get(`/workspace/${item._id}/tables?&&dueDate=next_week`);
-                tables.data.map((table) => (table.workspace = item.name));
-                return [...tables.data];
-            }),
-        );
-        const tables = data.map((item) => item).flat();
-
-        setDataNextWeek(tables);
-        setTaskNextWeek(tables.map((item) => item.tasks).flat());
-        return tables;
-    };
+    const renderTaskItems = useCallback(
+        (title, taskKey) => {
+            return (
+                <MyWorkItemMemo icon={images.arrowRightIcon} title={title} items={state[taskKey].length} key={taskKey}>
+                    {state.dataMyWork[taskKey].map((data, i) => (
+                        <div key={data._id} className={cx('my-work-items', i === 0 && 'first')}>
+                            <TaskTableBodyMemo
+                                tasks={data.tasks}
+                                key={data._id}
+                                index={data._id}
+                                tableTitle={data.name}
+                                taskBoardsTitle={data.workspace}
+                                main={i === 0}
+                                lite
+                            />
+                        </div>
+                    ))}
+                </MyWorkItemMemo>
+            );
+        },
+        [state],
+    );
 
     return (
         <div className={cx('my-work')}>
             {loading && (
-                <div>
-                    <div className={cx('overlay', { loading })}>
-                        <PuffLoader color="#fafafa" size={80} />
-                    </div>
+                <div className={cx('overlay')}>
+                    <PuffLoader color="#fafafa" size={80} />
                 </div>
             )}
             <div className={cx('my-work-title')}>
@@ -123,92 +139,21 @@ function MyWorkPage() {
             </div>
             <div className={cx('my-work-body')}>
                 <div className={cx('my-work-tool')}>
-                    <Search key={2} placeholder={'Search'} iconRight={images.searchIcon} hover />
+                    <Search
+                        key={2}
+                        placeholder={'Search'}
+                        iconRight={images.searchIcon}
+                        hover
+                        handleSetInputValue={handleSetInputValue}
+                    />
                     <input type="checkbox" />
                     <div>Hide done items</div>
                 </div>
                 <div>
-                    <MyWorkItem
-                        icon={images.arrowRightIcon}
-                        title={'Past Dates'}
-                        items={taskPastDate?.length > 0 ? taskPastDate?.length : 0}
-                    >
-                        {dataPastDate?.length > 0 &&
-                            dataPastDate?.map((data, index) => (
-                                <div key={index} className={cx('my-work-items', index === 0 && 'first')}>
-                                    <div></div>
-                                    <TaskTableBody
-                                        tasks={data.tasks}
-                                        key={data._id}
-                                        index={data._id}
-                                        tableTitle={data.name}
-                                        taskBoardsTitle={data.workspace}
-                                        main={index === 0 && true}
-                                        lite
-                                    />
-                                </div>
-                            ))}
-                    </MyWorkItem>
-                    <MyWorkItem
-                        icon={images.arrowRightIcon}
-                        title={'Today'}
-                        items={dataToday?.length > 0 ? taskToday?.length : 0}
-                    >
-                        {dataToday?.length > 0 &&
-                            dataToday?.map((data, index) => (
-                                <div key={index} className={cx('my-work-items', index === 0 && 'first')}>
-                                    <div></div>
-                                    <TaskTableBody
-                                        tasks={data.tasks}
-                                        key={data._id}
-                                        index={data._id}
-                                        tableTitle={data.name}
-                                        main={index === 0 && true}
-                                        lite
-                                    />
-                                </div>
-                            ))}
-                    </MyWorkItem>
-                    <MyWorkItem
-                        icon={images.arrowRightIcon}
-                        title={'This Week'}
-                        items={taskThisWeek?.length > 0 ? taskThisWeek.length : 0}
-                    >
-                        {dataThisWeek?.length > 0 &&
-                            dataThisWeek?.map((data, index) => (
-                                <div key={index} className={cx('my-work-items', index === 0 && 'first')}>
-                                    <div></div>
-                                    <TaskTableBody
-                                        tasks={data.tasks}
-                                        key={data._id}
-                                        index={data._id}
-                                        tableTitle={data.name}
-                                        main={index === 0 && true}
-                                        lite
-                                    />
-                                </div>
-                            ))}
-                    </MyWorkItem>
-                    <MyWorkItem
-                        icon={images.arrowRightIcon}
-                        title={'Next week'}
-                        items={taskNextWeek?.length > 0 ? taskNextWeek.length : 0}
-                    >
-                        {dataNextWeek?.length > 0 &&
-                            dataNextWeek?.map((data, index) => (
-                                <div key={index} className={cx('my-work-items', index === 0 && 'first')}>
-                                    <div></div>
-                                    <TaskTableBody
-                                        tasks={data.tasks}
-                                        key={data._id}
-                                        index={data._id}
-                                        tableTitle={data.name}
-                                        main={index === 0 && true}
-                                        lite
-                                    />
-                                </div>
-                            ))}
-                    </MyWorkItem>
+                    {['Past Date', 'Today', 'This Week', 'Next Week'].map((title) => {
+                        const taskKey = title.toLowerCase().replace(/ /g, '_');
+                        return renderTaskItems(title, taskKey);
+                    })}
                 </div>
             </div>
         </div>
