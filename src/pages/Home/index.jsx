@@ -9,34 +9,23 @@ import images from '~/assets/images';
 import TaskBoardItem from '~/layouts/components/Sidebar/TaskBoardList/TaskBoardItem';
 import Logo from '~/components/Logo/Logo';
 import WorkChoiceIcon from '~/layouts/components/Sidebar/WorkChoiceIcon';
-import axiosInstance from '~/axiosConfig';
 import { useContext, useEffect, useState } from 'react';
-import LoadingComponent from '~/layouts/components/Loading/LoadingComponent';
 import { MyTaskBoardValue } from '~/App';
 
 const cx = classNames.bind(styles);
 
 function Home() {
     const myTaskBoardsValue = useContext(MyTaskBoardValue);
+    const data = myTaskBoardsValue?.[0];
     const isLogin = !!localStorage.getItem('accessToken');
-    const [myTaskBoards, setTaskBoard] = useState(myTaskBoardsValue ? myTaskBoardsValue : [{ name: 'New Workspace' }]);
-    const [loading, setLoading] = useState(false);
-    const getAllTaskBoards = async () => {
-        setLoading(true);
-        try {
-            const taskBoards = await axiosInstance.get('/user/my_workspaces');
-            setTaskBoard(taskBoards.data);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const [myTaskBoards, setTaskBoard] = useState(data ? data : [{ name: 'New Workspace' }]);
+
     useEffect(() => {
-        if (isLogin && !MyTaskBoardValue) {
-            getAllTaskBoards();
+        if (isLogin) {
+            setTaskBoard(data);
         }
-    }, [isLogin]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data]);
 
     const accessToken = localStorage.getItem('accessToken');
     let decoded;
@@ -44,7 +33,6 @@ function Home() {
     const name = decoded?.username;
     return (
         <div className={cx('wrapper')}>
-            {loading && <LoadingComponent loading={loading} />}
             <HeaderHome></HeaderHome>
             <div className={cx('home-body')}>
                 <div className={cx('main-container')}>

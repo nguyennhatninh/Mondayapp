@@ -24,34 +24,23 @@ const cx = classNames.bind(styles);
 function Sidebar(show) {
     const dispatch = useDispatch();
     const myTaskBoardsValue = useContext(MyTaskBoardValue);
+    const data = myTaskBoardsValue?.[0];
+    const getNewData = myTaskBoardsValue?.[1];
     const isLogin = !!localStorage.getItem('accessToken');
     const [visible, setVisible] = useState(true);
-    const [myTaskBoards, setTaskBoards] = useState(myTaskBoardsValue ? myTaskBoardsValue : [{ name: 'New Workspace' }]);
-    const [originalTaskBoards, setOriginalTaskBoards] = useState(
-        myTaskBoardsValue ? myTaskBoardsValue : [{ name: 'New Workspace' }],
-    ); // Giữ dữ liệu gốc
+    const [myTaskBoards, setTaskBoards] = useState(data ? data : [{ name: 'New Workspace' }]);
 
     useEffect(() => {
-        if (isLogin && !myTaskBoardsValue) {
-            getAllTaskBoards();
+        if (isLogin) {
+            setTaskBoards(data);
         }
-    }, [isLogin, myTaskBoards]);
-
-    const getAllTaskBoards = async () => {
-        try {
-            const response = await axiosInstance.get('/user/my_workspaces');
-            setTaskBoards(response.data);
-            setOriginalTaskBoards(response.data);
-        } catch (error) {
-            console.error('Error fetching task boards:', error);
-        }
-    };
+    }, [data]);
 
     const handleAddTaskBoard = async () => {
         if (isLogin) {
             try {
                 await axiosInstance.post('/workspace');
-                await getAllTaskBoards();
+                await getNewData();
             } catch (error) {
                 console.error('Error adding task board:', error);
             }
@@ -62,9 +51,9 @@ function Sidebar(show) {
 
     const handleSetInputValue = (value) => {
         if (value.trim() === '') {
-            setTaskBoards(originalTaskBoards);
+            setTaskBoards(data);
         } else {
-            const filtered = originalTaskBoards.filter((taskBoard) =>
+            const filtered = myTaskBoards.filter((taskBoard) =>
                 taskBoard.name.toLowerCase().includes(value.toLowerCase()),
             );
             setTaskBoards(filtered);

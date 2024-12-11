@@ -40,7 +40,7 @@ function App() {
 
     return (
         <Router>
-            <MyTaskBoardValue.Provider value={myTaskBoards}>
+            <MyTaskBoardValue.Provider value={[myTaskBoards, getAllTaskBoards]}>
                 <div className="App">
                     <Routes>
                         {publicRoutes.map((route, index) => {
