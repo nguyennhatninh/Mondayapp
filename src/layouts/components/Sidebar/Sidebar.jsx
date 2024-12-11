@@ -35,7 +35,7 @@ function Sidebar(show) {
         if (isLogin && !myTaskBoardsValue) {
             getAllTaskBoards();
         }
-    }, [isLogin]);
+    }, [isLogin, myTaskBoards]);
 
     const getAllTaskBoards = async () => {
         try {
@@ -120,6 +120,7 @@ function Sidebar(show) {
                                         <TaskBoardItem
                                             to={`/TaskBoard/${taskBoard._id}`}
                                             key={taskBoard._id}
+                                            index={taskBoard._id}
                                             hover
                                             space
                                             icon={images.threeDotsIcon}
