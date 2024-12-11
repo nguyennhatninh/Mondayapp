@@ -20,6 +20,7 @@ function MyWorkPage() {
     const [allTasks, setAllTasks] = useState([]);
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [hideDone, setHideDone] = useState(false);
 
     const getMyTaskBoard = useCallback(async () => {
         const response = await axiosInstance.get('/user/my_workspaces');
@@ -74,13 +75,19 @@ function MyWorkPage() {
     useEffect(() => {
         const lowercasedValue = searchValue.toLowerCase();
 
-        const filtered = allTasks.filter((task) => task.name.toLowerCase().includes(lowercasedValue));
+        const filtered = allTasks.filter(
+            (task) => task.name.toLowerCase().includes(lowercasedValue) && (!hideDone || task.status !== 'done'),
+        );
 
         setFilteredTasks(filtered);
-    }, [searchValue]);
+    }, [searchValue, hideDone]);
 
     const handleSetInputValue = (value) => {
         setSearchValue(value);
+    };
+
+    const handleCheckboxChange = () => {
+        setHideDone((prev) => !prev);
     };
 
     const renderTaskItems = useCallback(
@@ -134,7 +141,7 @@ function MyWorkPage() {
                         hover
                         handleSetInputValue={handleSetInputValue}
                     />
-                    <input type="checkbox" />
+                    <input type="checkbox" checked={hideDone} onChange={handleCheckboxChange} />
                     <div>Hide done items</div>
                 </div>
                 <div>
