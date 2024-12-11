@@ -72,7 +72,7 @@ function SortToolItem({ icon, blur, id, index, label, onDragEnd, updateStateSort
                                     className={cx('render-item')}
                                     onClick={() => {
                                         if (isLogin) {
-                                            updateStateSort(sortKey, null);
+                                            updateStateSort(sortKey, true);
                                             setRenderToolSort(false);
                                         } else {
                                             dispatch(requireLogin(true));
@@ -86,7 +86,7 @@ function SortToolItem({ icon, blur, id, index, label, onDragEnd, updateStateSort
                                     className={cx('render-item')}
                                     onClick={() => {
                                         if (isLogin) {
-                                            updateStateSort(sortKey, null);
+                                            updateStateSort(sortKey, false);
                                             setRenderToolSort(false);
                                         } else {
                                             dispatch(requireLogin(true));
