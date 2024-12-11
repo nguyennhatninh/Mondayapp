@@ -6,7 +6,7 @@ import images from '~/assets/images';
 import Search from '~/components/Search/Search';
 import MyWorkItem from './MyWorkItem';
 import TaskTableBody from '../TaskBoard/BodyTaskBoard/TaskTableBody';
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axiosInstance from '~/axiosConfig';
 import { PuffLoader } from 'react-spinners';
 
@@ -15,34 +15,10 @@ const cx = classNames.bind(styles);
 const MyWorkItemMemo = React.memo(MyWorkItem);
 const TaskTableBodyMemo = React.memo(TaskTableBody);
 
-const taskReducer = (state, action) => {
-    switch (action.type) {
-        case 'SET_TASKS':
-            return {
-                ...state,
-                [action.payload.key]: action.payload.data,
-            };
-        case 'SET_DATA_MY_WORK':
-            return { ...state, dataMyWork: action.payload };
-        default:
-            return state;
-    }
-};
-
 function MyWorkPage() {
     const [searchValue, setSearchValue] = useState('');
-    const [state, dispatch] = useReducer(taskReducer, {
-        past_date: [],
-        today: [],
-        this_week: [],
-        next_week: [],
-        dataMyWork: {
-            past_date: [],
-            today: [],
-            this_week: [],
-            next_week: [],
-        },
-    });
+    const [allTasks, setAllTasks] = useState([]);
+    const [filteredTasks, setFilteredTasks] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const getMyTaskBoard = useCallback(async () => {
@@ -50,80 +26,83 @@ function MyWorkPage() {
         return response.data;
     }, []);
 
-    const getData = useCallback(
-        async (dueDate) => {
-            const myTaskBoards = await getMyTaskBoard();
-            const data = await Promise.all(
-                myTaskBoards.map(async (item) => {
-                    const response = await axiosInstance.get(
-                        `/workspace/${item._id}/tables?&&dueDate=${dueDate}&&query=${searchValue ?? ''}`,
-                    );
-                    return response.data.map((table) => ({
-                        ...table,
-                        workspace: item.name,
-                    }));
-                }),
-            );
-
-            const tables = data.flat();
-            dispatch({
-                type: 'SET_TASKS',
-                payload: {
-                    key: dueDate,
-                    data: tables.map((item) => item.tasks).flat(),
-                },
-            });
-
-            return tables;
-        },
-        [getMyTaskBoard, searchValue],
-    );
-
-    const fetchData = useCallback(async () => {
+    const fetchAllTasks = useCallback(async () => {
         setLoading(true);
         try {
             const keys = ['past_date', 'today', 'this_week', 'next_week'];
-            const allData = await Promise.all(keys.map((key) => getData(key)));
+            const myTaskBoards = await getMyTaskBoard();
 
-            const formattedData = keys.reduce((acc, key, idx) => {
-                acc[key] = allData[idx];
-                return acc;
-            }, {});
+            const allData = await Promise.all(
+                keys.map(async (key) => {
+                    const data = await Promise.all(
+                        myTaskBoards.map(async (item) => {
+                            const response = await axiosInstance.get(`/workspace/${item._id}/tables?&&dueDate=${key}`);
+                            return response.data.map((table) => ({
+                                ...table,
+                                workspace: item.name,
+                            }));
+                        }),
+                    );
+                    return data.flat();
+                }),
+            );
 
-            dispatch({ type: 'SET_DATA_MY_WORK', payload: formattedData });
+            const flattenedTasks = allData.flatMap((tables) =>
+                tables.flatMap((table) =>
+                    table.tasks.map((task) => ({
+                        ...task,
+                        workspace: table.workspace,
+                        tableTitle: table.name,
+                        dueDate: keys.find((key) => key),
+                    })),
+                ),
+            );
+
+            setAllTasks(flattenedTasks);
+            setFilteredTasks(flattenedTasks);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching tasks:', error);
         } finally {
             setLoading(false);
         }
-    }, [getData]);
+    }, [getMyTaskBoard]);
 
     useEffect(() => {
-        fetchData();
+        fetchAllTasks();
+    }, []);
+
+    useEffect(() => {
+        const lowercasedValue = searchValue.toLowerCase();
+
+        const filtered = allTasks.filter((task) => task.name.toLowerCase().includes(lowercasedValue));
+
+        setFilteredTasks(filtered);
     }, [searchValue]);
 
-    const handleSetInputValue = useCallback(async (value) => {
+    const handleSetInputValue = (value) => {
         setSearchValue(value);
-    }, []);
+    };
 
     const renderTaskItems = useCallback(
         (title, taskKey) => {
+            const tasksForKey = filteredTasks.filter((task) => task.dueDate === taskKey);
+
             return (
                 <MyWorkItemMemo
                     icon={images.arrowRightIcon}
                     title={title}
-                    items={state[taskKey].length}
+                    items={tasksForKey.length}
                     key={taskKey}
                     taskKey={taskKey}
                 >
-                    {state.dataMyWork[taskKey].map((data, i) => (
-                        <div key={data._id} className={cx('my-work-items', i === 0 && 'first')}>
+                    {tasksForKey.map((task, i) => (
+                        <div key={task._id} className={cx('my-work-items', i === 0 && 'first')}>
                             <TaskTableBodyMemo
-                                tasks={data.tasks}
-                                key={data._id}
-                                index={data._id}
-                                tableTitle={data.name}
-                                taskBoardsTitle={data.workspace}
+                                tasks={[task]}
+                                key={task._id}
+                                index={task._id}
+                                tableTitle={task.tableTitle}
+                                taskBoardsTitle={task.workspace}
                                 main={i === 0}
                                 lite
                             />
@@ -132,7 +111,7 @@ function MyWorkPage() {
                 </MyWorkItemMemo>
             );
         },
-        [state],
+        [filteredTasks],
     );
 
     return (
