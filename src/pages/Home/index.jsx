@@ -10,14 +10,16 @@ import TaskBoardItem from '~/layouts/components/Sidebar/TaskBoardList/TaskBoardI
 import Logo from '~/components/Logo/Logo';
 import WorkChoiceIcon from '~/layouts/components/Sidebar/WorkChoiceIcon';
 import axiosInstance from '~/axiosConfig';
-import { useEffect, useState } from 'react';
-import { PuffLoader } from 'react-spinners';
+import { useContext, useEffect, useState } from 'react';
+import LoadingComponent from '~/layouts/components/Loading/LoadingComponent';
+import { MyTaskBoardValue } from '~/App';
 
 const cx = classNames.bind(styles);
 
 function Home() {
+    const myTaskBoardsValue = useContext(MyTaskBoardValue);
     const isLogin = !!localStorage.getItem('accessToken');
-    const [myTaskBoards, setTaskBoard] = useState([{ name: 'New Workspace' }]);
+    const [myTaskBoards, setTaskBoard] = useState(myTaskBoardsValue ? myTaskBoardsValue : [{ name: 'New Workspace' }]);
     const [loading, setLoading] = useState(false);
     const getAllTaskBoards = async () => {
         setLoading(true);
@@ -31,7 +33,7 @@ function Home() {
         }
     };
     useEffect(() => {
-        if (isLogin) {
+        if (isLogin && !MyTaskBoardValue) {
             getAllTaskBoards();
         }
     }, [isLogin]);
@@ -42,13 +44,7 @@ function Home() {
     const name = decoded?.username;
     return (
         <div className={cx('wrapper')}>
-            {loading && (
-                <div>
-                    <div className={cx('overlay', { loading })}>
-                        <PuffLoader color="#fafafa" size={80} />
-                    </div>
-                </div>
-            )}
+            {loading && <LoadingComponent loading={loading} />}
             <HeaderHome></HeaderHome>
             <div className={cx('home-body')}>
                 <div className={cx('main-container')}>

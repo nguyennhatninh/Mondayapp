@@ -8,7 +8,7 @@ import MyWorkItem from './MyWorkItem';
 import TaskTableBody from '../TaskBoard/BodyTaskBoard/TaskTableBody';
 import React, { useCallback, useEffect, useState } from 'react';
 import axiosInstance from '~/axiosConfig';
-import { PuffLoader } from 'react-spinners';
+import LoadingComponent from '~/layouts/components/Loading/LoadingComponent';
 
 const cx = classNames.bind(styles);
 
@@ -123,11 +123,7 @@ function MyWorkPage() {
 
     return (
         <div className={cx('my-work')}>
-            {loading && (
-                <div className={cx('overlay', { loading })}>
-                    <PuffLoader color="#fafafa" size={80} />
-                </div>
-            )}
+            {loading && <LoadingComponent loading={loading} />}
             <div className={cx('my-work-title')}>
                 My work
                 <div></div>

@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearTool, requireLogin } from '~/redux/actions';
 import axiosInstance from '~/axiosConfig';
 import { toolsSelector } from '~/redux/selectors';
-import { PuffLoader } from 'react-spinners';
+import LoadingComponent from '~/layouts/components/Loading/LoadingComponent';
 
 const cx = classNames.bind(styles);
 
@@ -116,13 +116,7 @@ function TaskBoard({ taskBoard }) {
 
     return (
         <div className={cx('task-board-wrapper')}>
-            {loading && (
-                <div>
-                    <div className={cx('overlay', { loading })}>
-                        <PuffLoader color="#fafafa" size={80} />
-                    </div>
-                </div>
-            )}
+            {loading && <LoadingComponent loading={loading} />}
             <TablesInWorkspace.Provider value={[getAllTables, setTables]}>
                 <div className={cx('task-board-inner')}>
                     <div className={cx('task-board', { lite })}>

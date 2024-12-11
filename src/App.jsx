@@ -5,50 +5,66 @@ import DefaultLayout from '~/layouts';
 import TaskBoard from './pages/TaskBoard';
 import { createContext } from 'react';
 import axiosInstance from './axiosConfig';
+import LoadingComponent from './layouts/components/Loading/LoadingComponent';
 
 export const TaskBoardValue = createContext();
+export const MyTaskBoardValue = createContext();
 
 function App() {
     const isLogin = !!localStorage.getItem('accessToken');
-    const [myTaskBoards, setTaskBoard] = useState([{ name: 'New Workspace' }]);
+    const [myTaskBoards, setTaskBoard] = useState([]);
+    const [loading, setIsLoading] = useState(true);
+
     const getAllTaskBoards = async () => {
-        const taskBoards = await axiosInstance.get('/user/my_workspaces');
-        setTaskBoard(taskBoards.data);
+        try {
+            const response = await axiosInstance.get('/user/my_workspaces');
+            setTaskBoard(response.data);
+        } catch (error) {
+            console.error('Error fetching task boards:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
+
     useEffect(() => {
         if (isLogin) {
             getAllTaskBoards();
+        } else {
+            setIsLoading(false);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isLogin]);
+
+    if (loading) {
+        return <div>{loading && <LoadingComponent loading={loading} />}</div>;
+    }
 
     return (
         <Router>
-            <div className="App">
-                <Routes>
-                    {publicRoutes.map((route, index) => {
-                        let Layout = DefaultLayout;
-                        if (route.layout) {
-                            Layout = route.layout;
-                        } else if (route.layout === null) {
-                            Layout = Fragment;
-                        }
+            <MyTaskBoardValue.Provider value={myTaskBoards}>
+                <div className="App">
+                    <Routes>
+                        {publicRoutes.map((route, index) => {
+                            let Layout = DefaultLayout;
+                            if (route.layout) {
+                                Layout = route.layout;
+                            } else if (route.layout === null) {
+                                Layout = Fragment;
+                            }
 
-                        const Page = route.component;
-                        return (
-                            <Route
-                                key={index}
-                                path={route.path}
-                                element={
-                                    <Layout>
-                                        <Page />
-                                    </Layout>
-                                }
-                            />
-                        );
-                    })}
-                    {myTaskBoards.map((item, index) => {
-                        return (
+                            const Page = route.component;
+                            return (
+                                <Route
+                                    key={index}
+                                    path={route.path}
+                                    element={
+                                        <Layout>
+                                            <Page />
+                                        </Layout>
+                                    }
+                                />
+                            );
+                        })}
+                        {myTaskBoards.map((item, index) => (
                             <Route
                                 key={index}
                                 path={`/TaskBoard/${item._id}`}
@@ -60,10 +76,10 @@ function App() {
                                     </DefaultLayout>
                                 }
                             />
-                        );
-                    })}
-                </Routes>
-            </div>
+                        ))}
+                    </Routes>
+                </div>
+            </MyTaskBoardValue.Provider>
         </Router>
     );
 }

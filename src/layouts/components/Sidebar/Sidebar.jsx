@@ -2,7 +2,7 @@
 import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import images from '~/assets/images';
 import Button from '~/components/Button/Button';
 import styles from './Sidebar.module.scss';
@@ -17,50 +17,57 @@ import TaskBoardEmpty from './TaskBoardList/TaskBoardEmpty';
 import axiosInstance from '~/axiosConfig';
 import { useDispatch } from 'react-redux';
 import { requireLogin } from '~/redux/actions';
+import { MyTaskBoardValue } from '~/App';
 
 const cx = classNames.bind(styles);
 
 function Sidebar(show) {
     const dispatch = useDispatch();
-
+    const myTaskBoardsValue = useContext(MyTaskBoardValue);
     const isLogin = !!localStorage.getItem('accessToken');
     const [visible, setVisible] = useState(true);
-    const [myTaskBoards, setTaskBoards] = useState([{ name: 'New Workspace' }]);
+    const [myTaskBoards, setTaskBoards] = useState(myTaskBoardsValue ? myTaskBoardsValue : [{ name: 'New Workspace' }]);
+    const [originalTaskBoards, setOriginalTaskBoards] = useState(
+        myTaskBoardsValue ? myTaskBoardsValue : [{ name: 'New Workspace' }],
+    ); // Giữ dữ liệu gốc
 
     useEffect(() => {
-        if (isLogin) {
+        if (isLogin && !myTaskBoardsValue) {
             getAllTaskBoards();
         }
     }, [isLogin]);
 
-    useEffect(() => {
-        setTaskBoards(myTaskBoards);
-    }, [myTaskBoards]);
+    const getAllTaskBoards = async () => {
+        try {
+            const response = await axiosInstance.get('/user/my_workspaces');
+            setTaskBoards(response.data);
+            setOriginalTaskBoards(response.data);
+        } catch (error) {
+            console.error('Error fetching task boards:', error);
+        }
+    };
 
     const handleAddTaskBoard = async () => {
         if (isLogin) {
-            await axiosInstance.post('/workspace');
-            await getAllTaskBoards();
-            window.location.reload();
+            try {
+                await axiosInstance.post('/workspace');
+                await getAllTaskBoards();
+            } catch (error) {
+                console.error('Error adding task board:', error);
+            }
         } else {
             dispatch(requireLogin(true));
         }
     };
 
-    const handleSetInputValue = async (value) => {
-        const resultValue = myTaskBoards.filter((taskBoard) => taskBoard.name.includes(value));
-        setTaskBoards(resultValue);
-        if (value === '' && isLogin) {
-            const data = await getAllTaskBoards();
-            setTaskBoards([...data]);
-        }
-    };
-
-    const getAllTaskBoards = async () => {
-        if (isLogin) {
-            const taskBoards = await axiosInstance.get('/user/my_workspaces');
-            setTaskBoards(taskBoards.data);
-            return taskBoards.data;
+    const handleSetInputValue = (value) => {
+        if (value.trim() === '') {
+            setTaskBoards(originalTaskBoards);
+        } else {
+            const filtered = originalTaskBoards.filter((taskBoard) =>
+                taskBoard.name.toLowerCase().includes(value.toLowerCase()),
+            );
+            setTaskBoards(filtered);
         }
     };
 
@@ -109,11 +116,10 @@ function Sidebar(show) {
                             </div>
                             <TaskBoardList>
                                 {myTaskBoards?.length > 0 ? (
-                                    myTaskBoards.map((taskBoard, index) => (
+                                    myTaskBoards.map((taskBoard) => (
                                         <TaskBoardItem
                                             to={`/TaskBoard/${taskBoard._id}`}
-                                            key={index}
-                                            index={taskBoard._id}
+                                            key={taskBoard._id}
                                             hover
                                             space
                                             icon={images.threeDotsIcon}
