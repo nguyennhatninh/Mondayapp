@@ -30,6 +30,7 @@ const taskReducer = (state, action) => {
 };
 
 function MyWorkPage() {
+    const [searchValue, setSearchValue] = useState('');
     const [state, dispatch] = useReducer(taskReducer, {
         past_date: [],
         today: [],
@@ -54,7 +55,9 @@ function MyWorkPage() {
             const myTaskBoards = await getMyTaskBoard();
             const data = await Promise.all(
                 myTaskBoards.map(async (item) => {
-                    const response = await axiosInstance.get(`/workspace/${item._id}/tables?&&dueDate=${dueDate}`);
+                    const response = await axiosInstance.get(
+                        `/workspace/${item._id}/tables?&&dueDate=${dueDate}&&query=${searchValue ?? ''}`,
+                    );
                     return response.data.map((table) => ({
                         ...table,
                         workspace: item.name,
@@ -73,7 +76,7 @@ function MyWorkPage() {
 
             return tables;
         },
-        [getMyTaskBoard],
+        [getMyTaskBoard, searchValue],
     );
 
     const fetchData = useCallback(async () => {
@@ -97,10 +100,10 @@ function MyWorkPage() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [searchValue]);
 
-    const handleSetInputValue = useCallback((value) => {
-        console.log(value);
+    const handleSetInputValue = useCallback(async (value) => {
+        setSearchValue(value);
     }, []);
 
     const renderTaskItems = useCallback(

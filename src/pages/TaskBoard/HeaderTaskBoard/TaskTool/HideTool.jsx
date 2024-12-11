@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames/bind';
 import { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames/bind';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import classNames from 'classnames/bind';
 
 import styles from './TaskTool.module.scss';

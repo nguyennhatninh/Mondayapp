@@ -4,7 +4,8 @@ import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 function MyWorkItem({ icon, children, title, items, taskKey }) {
-    const check = taskKey === 'today' || taskKey === 'this_week';
+    const check = (taskKey === 'today' || taskKey === 'this_week') && children.length !== 0;
+
     const [show, setShow] = useState(check ? true : false);
     const handleShowChildren = () => {
         setShow(!show);
